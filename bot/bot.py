@@ -27,7 +27,7 @@ async def command_start_handler(message: Message) -> None:
 @dp.message(F.photo | F.text)
 async def text_and_photo_message_handler(message: Message) -> None:
     """
-    Handler will forward receive a text message to the Admin
+    This handler will forward receive a text message to the Admin
     """
     try:
         await bot.send_message(
@@ -37,6 +37,17 @@ async def text_and_photo_message_handler(message: Message) -> None:
         await message.send_copy(chat_id=config.admin_id)
     except TypeError as error:
         logging.ERROR(f'An error has occurred: {error}')
+
+
+@dp.message(F.video | F.sticker | F.file)
+async def unsupported_type_message_handler(message: Message) -> None:
+    """
+    This handler will send a notification that the message type is unsupported
+    """
+    await message.answer(
+        'Извини, но данный тип сообщений пока не поддерживается. \
+         Используй текст или фото, пожалуйста. 🙏'
+    )
 
 
 async def main():
