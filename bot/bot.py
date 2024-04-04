@@ -1,9 +1,10 @@
 import asyncio
-import logging
 
 from aiogram import Bot, Dispatcher, F
-from aiogram.filters import CommandStart
-from aiogram.types import Message
+from aiogram.exceptions import TelegramBadRequest
+from aiogram.filters import CommandStart, ExceptionTypeFilter
+from aiogram.types import ErrorEvent, Message
+from loguru import logger
 
 from config import config
 
@@ -31,12 +32,12 @@ async def text_and_photo_message_handler(message: Message) -> None:
     """
     try:
         await bot.send_message(
-            chat_id=config.admin_id,
+            chat_id=config.admin_chat_id,
             text=f'Сообщение от {message.from_user.full_name}:'
         )
-        await message.send_copy(chat_id=config.admin_id)
+        await message.send_copy(chat_id=config.admin_chat_id)
     except TypeError as error:
-        logging.ERROR(f'An error has occurred: {error}')
+        logger.error(f'An error has occurred: {error}')
 
 
 @dp.message(F.video | F.sticker | F.file)
@@ -50,10 +51,18 @@ async def unsupported_type_message_handler(message: Message) -> None:
     )
 
 
+@dp.error(ExceptionTypeFilter(TelegramBadRequest))
+async def bad_request_error_handler(event: ErrorEvent):
+    """
+    This handler logging TelegramBadRequest error
+    """
+    _ = event.update.message
+    logger.error(f'{event.exception}: id={_.chat.id}, text={_.text}')
+
+
 async def main():
     await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
