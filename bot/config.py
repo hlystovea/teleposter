@@ -3,9 +3,15 @@ from pydantic import SecretStr
 
 
 class Settings(BaseSettings):
-    bot_token: SecretStr
+    bot_token: SecretStr = ...
+    admin_id: int = ...
+    channel: str = ...
 
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(
+        env_file='.env',
+        env_file_encoding='utf-8',
+        extra='ignore',
+    )
 
 
 config = Settings()
