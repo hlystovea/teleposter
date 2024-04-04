@@ -1,7 +1,7 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher, F
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 from aiogram.filters import CommandStart, ExceptionTypeFilter
 from aiogram.types import ErrorEvent, Message
 from loguru import logger
@@ -55,6 +55,15 @@ async def unsupported_type_message_handler(message: Message) -> None:
 async def bad_request_error_handler(event: ErrorEvent):
     """
     This handler logging TelegramBadRequest error
+    """
+    _ = event.update.message
+    logger.error(f'{event.exception}: id={_.chat.id}, text={_.text}')
+
+
+@dp.error(ExceptionTypeFilter(TelegramForbiddenError))
+async def forbidden_error_handler(event: ErrorEvent):
+    """
+    This handler logging TelegramForbiddenError error
     """
     _ = event.update.message
     logger.error(f'{event.exception}: id={_.chat.id}, text={_.text}')
