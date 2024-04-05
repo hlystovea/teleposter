@@ -1,8 +1,26 @@
 services:
+  backend:
+    build: .
+    container_name: teleposter_backend
+    restart: unless-stopped
+    command: python3 src/main.py
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - static_value:/teleposter/src/static/
+    env_file:
+      - ./.env
+
   bot:
     build: .
     container_name: teleposter_bot
     restart: unless-stopped
     command: python3 bot/bot.py
+    depends_on:
+      - backend
     env_file:
       - ./.env
+
+
+volumes:
+  static_value:
