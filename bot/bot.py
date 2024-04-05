@@ -7,6 +7,7 @@ from aiogram.types import ErrorEvent, Message
 from loguru import logger
 
 from config import config
+from services.posts import send_for_moderation 
 
 
 bot = Bot(token=config.bot_token.get_secret_value())
@@ -30,14 +31,8 @@ async def text_and_photo_message_handler(message: Message) -> None:
     """
     This handler will forward receive a text message to the Admin
     """
-    try:
-        await bot.send_message(
-            chat_id=config.admin_chat_id,
-            text=f'Сообщение от {message.from_user.full_name}:'
-        )
-        await message.send_copy(chat_id=config.admin_chat_id)
-    except TypeError as error:
-        logger.error(f'An error has occurred: {error}')
+    await send_for_moderation(message)
+
 
 
 @dp.message(F.video | F.sticker | F.file)
@@ -52,7 +47,7 @@ async def unsupported_type_message_handler(message: Message) -> None:
 
 
 @dp.error(ExceptionTypeFilter(TelegramBadRequest))
-async def bad_request_error_handler(event: ErrorEvent):
+async def bad_request_error_handler(event: ErrorEvent) -> None:
     """
     This handler logging TelegramBadRequest error
     """
