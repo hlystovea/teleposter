@@ -1,9 +1,13 @@
-from fastapi import FastAPI, Request
+from http import HTTPStatus
+
+from fastapi import FastAPI
+
+from backend.schemes.posts import Post
 
 
-app = FastAPI(redoc_url=None, docs_url=None)
+app = FastAPI(redoc_url=None)
 
 
-@app.get('/')
-async def index(request: Request):
-    return {'Hello': 'world'}
+@app.post('/posts/', status_code=HTTPStatus.CREATED)
+async def create_post(post: Post):
+    return {'message': 'Пост был отправлен на модерацию'}
