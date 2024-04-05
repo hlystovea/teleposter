@@ -1,13 +1,13 @@
 import httpx
 from aiogram.types import Message
 
-from src.core.logger import logger
+from core.logger import logger
 
 
 async def send_for_moderation(message: Message) -> None:
     try:
         r = httpx.post(
-            'http://localhost:8000/posts/',
+            'http://backend:8000/posts/',
             json={
                 'user_id': message.chat.id,
                 'text': message.text,

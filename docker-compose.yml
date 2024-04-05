@@ -15,7 +15,7 @@ services:
     build: .
     container_name: teleposter_bot
     restart: unless-stopped
-    command: python3 bot/bot.py
+    command: python3 src/bot.py
     depends_on:
       - backend
     env_file:

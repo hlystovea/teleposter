@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     debug: bool = False
-    host: str = '127.0.0.1'
+    host: str = '0.0.0.0'
     port: int = 8000
     bot_token: SecretStr = ...
     admin_chat_id: int = ...

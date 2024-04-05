@@ -6,8 +6,8 @@ from aiogram.filters import CommandStart, ExceptionTypeFilter
 from aiogram.types import ErrorEvent, Message
 from loguru import logger
 
-from src.core.config import config
-from services.posts import send_for_moderation 
+from core.config import config
+from bot.services.posts import send_for_moderation
 
 
 bot = Bot(token=config.bot_token.get_secret_value())
