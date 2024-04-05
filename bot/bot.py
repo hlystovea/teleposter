@@ -6,7 +6,7 @@ from aiogram.filters import CommandStart, ExceptionTypeFilter
 from aiogram.types import ErrorEvent, Message
 from loguru import logger
 
-from config import config
+from src.core.config import config
 from services.posts import send_for_moderation 
 
 

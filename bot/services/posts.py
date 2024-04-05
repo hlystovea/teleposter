@@ -1,6 +1,7 @@
 import httpx
 from aiogram.types import Message
-from loguru import logger
+
+from src.core.logger import logger
 
 
 async def send_for_moderation(message: Message) -> None:

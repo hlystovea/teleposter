@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from fastapi import FastAPI
 
-from backend.schemes.posts import Post
+from src.schemes.posts import Post
 
 
 app = FastAPI(redoc_url=None)
