@@ -1,15 +1,44 @@
 services:
+  mongo:
+    image: mongo
+    container_name: teleposter_mongodb
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - mongodb-data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: teleposter_mongo_express
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    env_file:
+      - ./.env
+
   backend:
     build: .
     container_name: teleposter_backend
     restart: unless-stopped
     command: python3 src/main.py
     ports:
-      - ${PORT}:${PORT}
-    volumes:
-      - static_value:/teleposter/src/static/
+      - ${API_PORT}:${API_PORT}
+    depends_on:
+      - mongo
     env_file:
       - ./.env
+    volumes:
+      - static_value:/teleposter/src/static/
+    develop:
+      watch: 
+        - path: ./requirements.txt
+          action: rebuild
+        - path: ./src
+          target: /teleposter/src
+          action: sync
 
   bot:
     build: .
@@ -24,3 +53,4 @@ services:
 
 volumes:
   static_value:
+  mongodb-data:

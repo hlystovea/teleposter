@@ -1,30 +1,21 @@
-from http import HTTPStatus
-
 import uvicorn
 from fastapi import FastAPI
 
 from core.config import config
-from core.messages import MSG
-from schemes.posts import RequestPost, ResponsePost
+from routes.v1.posts import router as v1_posts_router
 
 
 app = FastAPI(title=config.title, redoc_url=None)
 
+app.include_router(v1_posts_router)
 
-@app.post(
-    '/posts/',
-    response_model=ResponsePost,
-    status_code=HTTPStatus.CREATED,
-    tags=['posts'],
-    summary='create post',
-    description='Create a new non-moderated post',
-    name='v1:posts:post-create',
-)
-async def create_post(post: RequestPost):
-    return {'message': MSG.post_has_been_sent}
+
+@app.get("/")
+async def index():
+    return {'message': 'Home page'}
 
 
 if __name__ == '__main__':
     uvicorn.run(
-        'main:app', host=config.host, port=config.port, reload=config.debug
+        'main:app', host=config.host, port=config.api_port, reload=config.debug
     )
