@@ -1,6 +1,7 @@
 from bson import ObjectId
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pymongo.results import DeleteResult
 
 from core.messages import MSG
 from db.mongo import posts_collection
@@ -51,7 +52,7 @@ async def create_post(post: TelegramMessage, posts=Depends(posts_collection)):
     name='v1:posts:post-delete',
 )
 async def delete_post(post_id: str, posts=Depends(posts_collection)):
-    result = await posts.delete_one({'_id': ObjectId(post_id)})
+    result: DeleteResult = await posts.delete_one({'_id': ObjectId(post_id)})
 
     if not result.deleted_count:
         raise HTTPException(status_code=404, detail='Post not found')
