@@ -6,21 +6,40 @@
         <meta name="description" content="Telegram channel management service">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="static/css/style.css">
+        <script src="static/js/posts.js" async defer></script>
     </head>
     <body class="body">
-        <header>
+        <header class="header">
             <nav>
-                <ul></ul>
+                <ul>Header</ul>
             </nav>
         </header>
-        <main>
+        <main class="content">
             <h2>Новости</h2>
             <section class="posts">
+                <p>Нет доступных публикаций</p>
             </section>
         </main>
-        <footer>
+        <footer class="footer">
             Footer
         </footer>
-        <script src="static/js/posts.js" async defer></script>
+        <template id="post-template">
+            <div class="post">
+                <p class="post-text"></p>
+                <span class="post-status"></span>
+                <button name="publishButton" type="button">Опубликовать</button>
+                <button name="deleteButton" type="button">Удалить</button>
+            </div>
+        </template>
+        <script>
+            // Call onLoad after loading the html code
+            document.addEventListener('DOMContentLoaded', () => {
+                onLoad();
+            });
+
+            async function onLoad () {
+                await updatePosts();
+            };
+        </script>
     </body>
 </html>
