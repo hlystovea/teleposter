@@ -1,6 +1,6 @@
-from datetime import datetime
+from pydantic import BaseModel
 
-from pydantic import BaseModel, Field
+from schemes.posts import Post
 
 
 class TelegramChat(BaseModel):
@@ -21,10 +21,8 @@ class TelegramPhotoSize(BaseModel):
     file_size: int
 
 
-class TelegramMessage(BaseModel):
-    text: str | None = None
+class TelegramMessage(Post):
     sender_chat: TelegramChat | None = None
     chat: TelegramChat | None = None
     photo: list[TelegramPhotoSize] | None = None
     caption: str | None = None
-    create_at: datetime = Field(default_factory=datetime.now)
