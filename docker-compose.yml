@@ -24,14 +24,10 @@ services:
     container_name: teleposter_backend
     restart: unless-stopped
     command: python3 src/main.py
-    ports:
-      - ${API_PORT}:${API_PORT}
     depends_on:
       - mongo
     env_file:
       - ./.env
-    volumes:
-      - static_value:/teleposter/src/static/
     develop:
       watch: 
         - path: ./requirements.txt
@@ -50,7 +46,17 @@ services:
     env_file:
       - ./.env
 
+  nginx:
+    image: nginx:latest
+    container_name: teleposter_nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/var/html/static
+    env_file:
+      - ./.env
+  
 
 volumes:
-  static_value:
   mongodb-data:
