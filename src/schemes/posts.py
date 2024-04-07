@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field
+from pydantic_mongo import ObjectIdField
 
 
 class Post(BaseModel):
@@ -11,5 +12,9 @@ class Post(BaseModel):
     status: Literal['non-moderated', 'published'] = 'non-moderated'
 
 
-class PostCreatedResponse(BaseModel):
+class ResponsePost(Post):
+    id: ObjectIdField = Field(alias='_id', serialization_alias='id')
+
+
+class ResponseMessage(BaseModel):
     message: str
