@@ -7,16 +7,17 @@ body {
         "left-side main right-side"
         "footer footer footer";
     min-height: 100vh;
+    margin: 0;
 }
 
-.header {
+header {
     grid-area: header;
 }
 
-.content {
+main {
     grid-area: main;
 }
 
-.footer {
+footer {
     grid-area: footer;
 }
