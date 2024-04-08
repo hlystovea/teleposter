@@ -17,10 +17,19 @@ async def send_for_moderation(message: Message) -> None:
         response = httpx.post(url, json=post.model_dump(exclude={'create_at'}))
         response.raise_for_status()
 
+        await send_to_administrators(message)
         await message.answer(response.json()['message'])
 
     except (TypeError, ValidationError, HTTPError) as error:
         await message.answer('Упс.. Что-то пошло не так')
         await message.send_copy(message.chat.id)
 
+        logger.error(f'An error has occurred: {repr(error)}')
+
+
+async def send_to_administrators(message: Message) -> None:
+    try:
+        await message.forward(config.admin_chat_id)
+
+    except HTTPError as error:
         logger.error(f'An error has occurred: {repr(error)}')
