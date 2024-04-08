@@ -5,8 +5,7 @@ from pymongo.results import DeleteResult
 
 from core.messages import MSG
 from db.mongo import posts_collection
-from schemes.posts import ResponsePost, ResponseMessage
-from schemes.telegram import TelegramMessage
+from schemes.posts import Post, ResponsePost, ResponseMessage
 
 
 router = APIRouter(prefix='/api/v1/posts', tags=['posts'])
@@ -38,7 +37,7 @@ async def get_posts(posts=Depends(posts_collection)):
     description='Creates a new non-moderated post',
     name='v1:posts:post-create',
 )
-async def create_post(post: TelegramMessage, posts=Depends(posts_collection)):
+async def create_post(post: Post, posts=Depends(posts_collection)):
     _ = await posts.insert_one(post.model_dump())
     return {'message': MSG.post_has_been_sent}
 

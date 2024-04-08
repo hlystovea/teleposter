@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from schemes.posts import Post
-
 
 class TelegramChat(BaseModel):
     id: int
@@ -21,7 +19,8 @@ class TelegramPhotoSize(BaseModel):
     file_size: int
 
 
-class TelegramMessage(Post):
+class TelegramMessage(BaseModel):
+    text: str | None = None
     sender_chat: TelegramChat | None = None
     chat: TelegramChat | None = None
     photo: list[TelegramPhotoSize] | None = None
