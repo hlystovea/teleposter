@@ -3,7 +3,7 @@
 body {
     display: grid;
     grid-template-columns: auto 800px auto;
-    grid-template-rows: 100px 1fr 100px;
+    grid-template-rows: 60px 1fr 200px;
     grid-template-areas:
         "header header header"
         "left-side main right-side"
@@ -16,7 +16,10 @@ body {
 }
 
 header {
+    display: flex;
     grid-area: header;
+    justify-content: center;
+    background-color: #2d2d44;
 }
 
 main {
@@ -25,9 +28,24 @@ main {
 
 footer {
     grid-area: footer;
+    margin-top: 50px;
+    background-color: #2d2d44;
+}
+
+header nav {
+    width: 800px;
+    border: 1px dotted white;
 }
 
 .posts {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    border: 1px dotted black;
+}
+
+.post {
+    min-width: 600px;
+    border: 1px dotted black;
 }
