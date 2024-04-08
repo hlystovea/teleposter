@@ -4,13 +4,14 @@ from aiogram import Bot, Dispatcher
 from loguru import logger
 
 from core.config import config
-from bot.handlers import errors, posts
+from bot.handlers import admin, errors, posts
 
 
 async def main():
     bot = Bot(token=config.bot_token.get_secret_value())
     dp = Dispatcher()
 
+    dp.include_router(admin.router)
     dp.include_router(posts.router)
     dp.include_router(errors.router)
 
