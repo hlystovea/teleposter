@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 body {
     display: grid;
     grid-template-columns: auto 800px auto;
@@ -8,6 +10,9 @@ body {
         "footer footer footer";
     min-height: 100vh;
     margin: 0;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 header {
@@ -20,4 +25,9 @@ main {
 
 footer {
     grid-area: footer;
+}
+
+.posts {
+    display: flex;
+    justify-content: center;
 }

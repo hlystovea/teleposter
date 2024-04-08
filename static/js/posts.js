@@ -1,6 +1,6 @@
 // Update the posts
 async function updatePosts() {
-    await fetch('http://localhost/api/v1/posts')
+    await fetch('api/v1/posts')
         .then(response => response.json())
         .then(data => {
             renderPosts(data);
@@ -12,11 +12,11 @@ async function updatePosts() {
 
 // Render the posts
 const renderPosts = function(posts) {
-    const postsSection = document.querySelector('.posts');
-    postsSection.replaceChildren();
+    const postsBlock = document.querySelector('.posts');
+    postsBlock.replaceChildren();
 
     posts.forEach(post => {
-        postsSection.appendChild(createPost(post));
+        postsBlock.appendChild(createPost(post));
     });
 };
 
@@ -41,7 +41,7 @@ async function deletePost(id) {
     post = document.getElementById(id);
     if (post) {
         post.remove();
-        await fetch('http://localhost/api/v1/posts/' + id, {
+        await fetch('api/v1/posts/' + id, {
             method: 'DELETE',
         })
     }
