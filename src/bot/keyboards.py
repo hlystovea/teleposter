@@ -1,15 +1,30 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup
 
-
-ADMIN_ENTRANCE_BUTTONS = {
-    'moderators': 'Изменить список модераторов',
-}
+from bot.callbacks import (AdminEntranceCallback, AdminModeratorsCallback,
+                           EntranceAction, ModeratorsAction)
 
 
 def admin_entrance_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    for action, text in ADMIN_ENTRANCE_BUTTONS.items():
-        builder.button(text=text, callback_data=f'admin:{action}')
+    for action in EntranceAction:
+        builder.button(
+            text=action.value.title(),
+            callback_data=AdminEntranceCallback(action=action)
+        )
+
+    return builder.as_markup()
+
+
+def admin_moderators_keyboard() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for action in ModeratorsAction:
+        builder.button(
+            text=action.value.title(),
+            callback_data=AdminModeratorsCallback(action=action)
+        )
+    
+    builder.adjust(2, 1)
 
     return builder.as_markup()
