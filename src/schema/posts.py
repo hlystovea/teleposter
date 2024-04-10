@@ -4,7 +4,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from pydantic_mongo import ObjectIdField
 
-from schemes.telegram import TelegramMessage
+from schema.telegram import TelegramMessage
 
 
 class Post(TelegramMessage):

@@ -5,7 +5,7 @@ from pymongo.results import DeleteResult
 
 from core.messages import MSG
 from db.mongo import posts_collection
-from schemes.posts import Post, ResponsePost, ResponseMessage
+from schema.posts import Post, ResponsePost, ResponseMessage
 
 
 router = APIRouter(prefix='/api/v1/posts', tags=['posts'])
