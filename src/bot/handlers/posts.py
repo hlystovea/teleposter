@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Bot, F, Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
@@ -19,11 +19,11 @@ async def command_start_handler(message: Message) -> None:
 
 
 @router.message(F.photo | F.text)
-async def text_and_photo_message_handler(message: Message) -> None:
+async def text_and_photo_message_handler(message: Message, bot: Bot) -> None:
     """
     This handler will forward receive a text message to the Admin
     """
-    await send_for_moderation(message)
+    await send_for_moderation(message, bot)
 
 
 @router.message(F.video | F.sticker | F.file)
