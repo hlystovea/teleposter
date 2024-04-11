@@ -24,16 +24,12 @@ async def forward_message(message: Message, chat_id: int | str) -> None:
 
 
 async def send_to_administrators(message: Message, bot: Bot) -> None:
-    try:
-        admins = await bot.get_chat_administrators(f'@{config.channel}')
+    admins = await bot.get_chat_administrators(config.channel)
 
-        async with TaskGroup() as tg:
-            for admin in admins:
-                if not admin.user.is_bot:
-                    tg.create_task(forward_message(message, admin.user.id))
-
-    except (TelegramBadRequest, TypeError) as error:
-        logger.error(f'An error has occurred: {repr(error)}')
+    async with TaskGroup() as tg:
+        for admin in admins:
+            if not admin.user.is_bot:
+                tg.create_task(forward_message(message, admin.user.id))
 
 
 async def save_to_db(message: Message) -> None:
@@ -46,16 +42,3 @@ async def save_to_db(message: Message) -> None:
 
     except (TypeError, KeyError, ValidationError, HTTPError) as error:
         logger.error(f'An error has occurred: {repr(error)}')
-
-
-async def send_for_moderation(message: Message, bot: Bot) -> None:
-    try:
-        async with TaskGroup() as tg:
-            tg.create_task(save_to_db(message))
-            tg.create_task(send_to_administrators(message, bot))
-
-        await message.answer(MSG.post_has_been_sent)
-
-    except (TypeError, CancelledError, InvalidStateError) as error:
-        logger.error(f'An error has occurred: {repr(error)}')
-        await message.answer(MSG.oops_error)
