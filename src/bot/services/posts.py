@@ -10,7 +10,6 @@ from pydantic import ValidationError
 
 from core.config import config
 from core.logger import logger
-from core.messages import MSG
 from main import app
 from schema.telegram import TelegramMessage
 
@@ -20,7 +19,9 @@ async def forward_message(message: Message, chat_id: int | str) -> None:
         await message.forward(chat_id)
 
     except TelegramBadRequest as error:
-        logger.error(f'An error has occurred: {repr(error)}')
+        logger.error(
+            f'An error occurred while forwarding the message: {repr(error)}'
+        )
 
 
 async def send_to_administrators(message: Message, bot: Bot) -> None:
@@ -41,4 +42,6 @@ async def save_to_db(message: Message) -> None:
         response.raise_for_status()
 
     except (TypeError, KeyError, ValidationError, HTTPError) as error:
-        logger.error(f'An error has occurred: {repr(error)}')
+        logger.error(
+            f'An error occurred while saving the message: {repr(error)}'
+        )
