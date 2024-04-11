@@ -1,7 +1,7 @@
 from aiogram import Bot, F, Router
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import CommandStart
-from aiogram.types import Message
+from aiogram.types import Message, Chat
 
 from core.config import config
 from core.logger import logger
@@ -13,11 +13,12 @@ router = Router()
 
 
 @router.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
+async def command_start_handler(message: Message, bot: Bot) -> None:
     """
     This handler receives messages with `/start` command
     """
-    await message.answer(MSG.welcome.format(config.channel))
+    channel: Chat = await bot.get_chat(config.channel)
+    await message.answer(MSG.welcome.format(channel.title or channel.username))
 
 
 @router.message(F.photo | F.text)
