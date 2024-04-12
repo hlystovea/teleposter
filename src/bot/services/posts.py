@@ -35,7 +35,7 @@ async def send_to_administrators(message: Message, bot: Bot) -> None:
 
 async def save_to_db(message: Message) -> None:
     try:
-        url = config.api_url + app.url_path_for('v1:posts:post-create')
+        url = f'{config.api_url}{app.url_path_for("v1:posts:post-create")}'
         post = TelegramMessage.model_validate(message, from_attributes=True)
 
         response = httpx.post(url, json=post.model_dump(exclude={'create_at'}))

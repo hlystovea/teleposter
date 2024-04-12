@@ -1,4 +1,4 @@
-from pydantic import SecretStr
+from pydantic import SecretStr, HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -8,19 +8,13 @@ class Settings(BaseSettings):
     host: str = '0.0.0.0'
     bot_token: SecretStr = ...
     channel: int = ...
-    api_schema: str = 'http'
-    api_domain: str = 'localhost'
-    api_port: int = 8000
+    api_url: HttpUrl = 'http://localhost:8000'
     mongo_url: str = ...
 
     model_config = SettingsConfigDict(
         env_file='.env',
         extra='ignore',
     )
-
-    @property
-    def api_url(self) -> str:
-        return f'{self.api_schema}://{self.api_domain}:{self.api_port}'
 
 
 config = Settings()
