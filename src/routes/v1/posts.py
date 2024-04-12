@@ -14,7 +14,6 @@ router = APIRouter(prefix='/api/v1/posts', tags=['posts'])
 @router.get(
     '/',
     response_model=list[ResponsePost],
-    tags=['posts'],
     summary='get posts',
     description='Responds with a list of posts',
     name='v1:posts:post-list',
@@ -32,7 +31,6 @@ async def get_posts(posts=Depends(posts_collection)):
     '/',
     response_model=ResponseMessage,
     status_code=status.HTTP_201_CREATED,
-    tags=['posts'],
     summary='create post',
     description='Creates a new non-moderated post',
     name='v1:posts:post-create',
@@ -45,7 +43,6 @@ async def create_post(post: Post, posts=Depends(posts_collection)):
 @router.delete(
     '/{post_id}',
     response_model=ResponseMessage,
-    tags=['posts'],
     summary='delete post',
     description='Deletes the post',
     name='v1:posts:post-delete',
