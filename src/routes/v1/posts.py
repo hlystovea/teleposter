@@ -1,7 +1,7 @@
 from bson import ObjectId
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pymongo.results import DeleteResult
+from pymongo.results import DeleteResult, UpdateResult
 
 from core.messages import MSG
 from db.mongo import posts_collection
@@ -54,3 +54,22 @@ async def delete_post(post_id: str, posts=Depends(posts_collection)):
         raise HTTPException(status_code=404, detail='Post not found')
 
     return {'message': MSG.post_has_been_deleted}
+
+
+@router.put(
+    '/{post_id}',
+    response_model=ResponseMessage,
+    summary='update post',
+    description='Updates the post',
+    name='v1:posts:post-update',
+)
+async def update_post(post_id: str, post: Post, posts=Depends(posts_collection)):
+    result: UpdateResult = await posts.update_one(
+        filter={'_id': ObjectId(post_id)},
+        update=post.model_dump(exclude={'id'})
+    )
+
+    if not result.matched_count or not result.modified_count:
+        raise HTTPException(status_code=404, detail='Post not found')
+
+    return {'message': MSG.post_has_been_updated}
