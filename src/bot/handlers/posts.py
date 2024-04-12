@@ -21,8 +21,8 @@ async def command_start_handler(message: Message, bot: Bot) -> None:
     await message.answer(MSG.welcome.format(channel.title or channel.username))
 
 
-@router.message(F.photo | F.text)
-async def text_and_photo_message_handler(message: Message, bot: Bot) -> None:
+@router.message(F.photo | F.text | F.video)
+async def common_message_handler(message: Message, bot: Bot) -> None:
     """
     This handler will forward receive a text message to the Administrators
     """
@@ -38,7 +38,7 @@ async def text_and_photo_message_handler(message: Message, bot: Bot) -> None:
         await save_to_db(message)
 
 
-@router.message(F.video | F.sticker | F.file)
+@router.message(F.sticker | F.file)
 async def unsupported_type_message_handler(message: Message) -> None:
     """
     This handler will send a notification that the message type is unsupported
