@@ -1,5 +1,4 @@
 from asyncio import TaskGroup
-from asyncio.exceptions import CancelledError, InvalidStateError
 
 import httpx
 from aiogram import Bot
