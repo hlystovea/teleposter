@@ -37,9 +37,11 @@ async def save_to_db(message: Message) -> None:
     try:
         url = f'{config.api_url}{app.url_path_for("v1:posts:post-create")}'
         post = TelegramMessage.model_validate(message, from_attributes=True)
+        data = post.model_dump(exclude={'create_at'})
 
-        response = httpx.post(url, json=post.model_dump(exclude={'create_at'}))
-        response.raise_for_status()
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=data)
+            response.raise_for_status()
 
     except (TypeError, KeyError, ValidationError, HTTPError) as error:
         logger.error(
