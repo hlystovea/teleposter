@@ -9,14 +9,18 @@ def get_api_url(method: str, token=config.bot_token) -> str:
 
 
 async def publish_in_channel(post: Post) -> None:
-    url = get_api_url('sendMessage')
-
     headers = {'Content-Type': 'application/json'}
+    data = {'chat_id': config.channel}
 
-    data = {
-        'chat_id': config.channel,
-        'text': post.text,
-    }
+    if post.photo:
+        url = get_api_url('sendPhoto')
+        data |= {'photo': post.photo[0].file_id, 'caption': post.caption}
+    elif post.video:
+        url = get_api_url('sendVideo')
+        data |= {'video': post.video.file_id, 'caption': post.caption}
+    else:
+        url = get_api_url('sendMessage')
+        data |= {'text': post.text}
 
     async with AsyncClient() as client:
         response = await client.post(url, headers=headers, json=data)

@@ -11,12 +11,24 @@ class TelegramChat(BaseModel):
     is_forum: bool | None = None
 
 
-class TelegramPhotoSize(BaseModel):
+class TelegramMedia(BaseModel):
     file_id: str
     file_unique_id: str
+    file_size: int | None = None
+
+
+class TelegramPhotoSize(TelegramMedia):
     width: int
     height: int
-    file_size: int
+
+
+class TelegramVideo(TelegramMedia):
+    width: int
+    height: int
+    duration: int
+    thumbnail: TelegramPhotoSize | None = None
+    file_name: str | None = None
+    mime_type: str | None = None
 
 
 class TelegramMessage(BaseModel):
@@ -24,4 +36,5 @@ class TelegramMessage(BaseModel):
     sender_chat: TelegramChat | None = None
     chat: TelegramChat | None = None
     photo: list[TelegramPhotoSize] | None = None
+    video: TelegramVideo | None = None
     caption: str | None = None
