@@ -13,6 +13,10 @@ class Post(TelegramMessage):
     status: Literal['non-moderated', 'published'] = 'non-moderated'
 
 
+class RequestPost(BaseModel):
+    text: str | None = None
+
+
 class ResponsePost(Post):
     id: ObjectIdField = Field(alias='_id', serialization_alias='id')
 

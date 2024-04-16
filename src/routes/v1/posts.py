@@ -9,7 +9,7 @@ from core.logger import logger
 from core.messages import MSG
 from db.mongo import posts
 from httpx import HTTPError
-from schema.posts import Post, ResponsePost, ResponseMessage
+from schema.posts import Post, RequestPost, ResponsePost, ResponseMessage
 from services.telegram import publish_in_channel
 
 
@@ -90,22 +90,24 @@ async def delete_post(post_id: str, posts=Depends(posts)) -> None:
     description='Updates a post',
     name='v1:posts:post-update',
 )
-async def update_post(post_id: str, post: Post, posts=Depends(posts)):
+async def update_post(post_id: str, post: RequestPost, posts=Depends(posts)):
     result: UpdateResult = await posts.update_one(
         filter={'_id': ObjectId(post_id)},
-        update={'$set': post.model_dump(exclude={'id'})}
+        update={'$set': post.model_dump(exclude_unset=True)}
     )
 
-    if not result.matched_count or not result.modified_count:
+    if not result.matched_count:
         raise HTTPException(status_code=404, detail='Post not found')
 
-    return result.raw_result
+    updated_post = await posts.find_one({'_id': ObjectId(post_id)})
+
+    return updated_post
 
 
 @router.post(
     '/{post_id}/publish',
     response_model=ResponseMessage,
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     summary='publish post',
     description='Publishes a post in a telegram channel',
     name='v1:posts:post-publish',
