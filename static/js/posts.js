@@ -1,16 +1,14 @@
-// Update the posts
 async function updatePosts() {
-    await fetch('api/v1/posts')
-        .then(response => response.json())
-        .then(data => {
-            renderPosts(data);
-        })
-        .catch(error => {
-            console.log('Error: ', error);
-        });
+    fetch('api/v1/posts')
+    .then(response => response.json())
+    .then(data => {
+        renderPosts(data);
+    })
+    .catch(error => {
+        console.log('Error: ', error);
+    });
 }
 
-// Render the posts
 const renderPosts = function(posts) {
     const postsBlock = document.querySelector('.posts');
     postsBlock.replaceChildren();
@@ -20,7 +18,6 @@ const renderPosts = function(posts) {
     });
 }
 
-// Return a new post
 const createPost = function(post) {
     const template = document.querySelector('#post-template').content;
     const newPost = template.querySelector('div').cloneNode(true);
@@ -32,35 +29,61 @@ const createPost = function(post) {
     newPost.id = post.id;
     newPost.querySelector('.post-text').textContent = post.text;
 
-    publishButton.onclick = () => publishPost(newPost);
-    editButton.onclick = () => editPost(newPost);
-    deleteButton.onclick = () => deletePost(newPost);
+    publishButton.onclick = async () => publishPost(newPost);
+    editButton.onclick = async () => renderForm(newPost);
+    deleteButton.onclick = async () => deletePost(newPost);
 
     return newPost;
 }
 
-// Publish a post
 async function publishPost(post) {
-    await fetch(`api/v1/posts/${post.id}/publish`, {
+    fetch(`api/v1/posts/${post.id}/publish`, {
         method: 'POST',
-    }).then(response => {
+    })
+    .then(response => {
         if (!response.ok) {
-            throw new Error('Ошибка запроса');
+            throw new Error(response.text());
         }
         post.remove();
-    }).catch(error => {
-        console.log(error);
+    })
+    .catch(error => {
+        console.log('Error: ', error);
     });
 }
 
-// Edit a post
-async function editPost(post) {
+async function renderForm(post) {
     const form = document.querySelector('#post-form').content.cloneNode(true);
-    const textInput = form.querySelector('.text-input');
+    const saveButton = form.querySelector('.btn-post-save');
 
+    const textInput = form.querySelector('.text-input');
     textInput.value = post.querySelector('.post-text').textContent;
+
     post.replaceChildren(form);
+    saveButton.onclick = async () => editPost(form, post);
 }
+
+async function editPost(form, post) {
+    const formData = new FormData(document.querySelector('form'));
+    const data = Object.fromEntries(formData.entries());
+    const jsonData = JSON.stringify(data);
+
+    fetch(`api/v1/posts/${post.id}`, {
+        method: 'PATCH',
+        body: jsonData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(response.text());
+        }
+    })
+    .catch(error => {
+        console.log('Error: ', error);
+    });
+}
+
 
 // Delete a post
 async function deletePost(post) {
@@ -69,11 +92,11 @@ async function deletePost(post) {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Ошибка запроса');
+            throw new Error(response.text());
         }
         post.remove();
     })
     .catch(error => {
-        console.log(error);
+        console.log('Error: ', error);
     });
 }
