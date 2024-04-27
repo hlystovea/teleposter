@@ -38,3 +38,20 @@ class TelegramMessage(BaseModel):
     photo: list[TelegramPhotoSize] | None = None
     video: TelegramVideo | None = None
     caption: str | None = None
+
+
+class TelegramAuthData(BaseModel):
+    id: int
+    first_name: str = ''
+    last_name: str = ''
+    username: str
+    photo_url: str | None = None
+    auth_date: str
+    hash: str
+
+    @property
+    def data_check_string(self):
+        return (f'auth_date={self.auth_date}\n'
+                f'first_name={self.first_name}\n'
+                f'id={self.id}\n'
+                f'username={self.username}')

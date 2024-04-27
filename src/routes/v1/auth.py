@@ -1,33 +1,46 @@
-import hmac
-from typing import Annotated
-
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, status
 from fastapi.requests import Request
-from fastapi.responses import PlainTextResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 from joserfc import jwt
 
 from core.config import config
+from core.logger import logger
+from schema.telegram import TelegramAuthData
+from services.telegram import check_auth_data
+
 
 router = APIRouter(prefix='/auth')
 
 
-@router.get('/telegram-callback')
-async def telegram_callback(
-        request: Request,
-        user_id: Annotated[int, Query(alias='id')],
-        query_hash: Annotated[str, Query(alias='hash')],
-        next_url: Annotated[str, Query(alias='next')] = '/',
+@router.get(
+    '/telegram-auth',
+    response_class=RedirectResponse,
+    summary='authorize user',
+    description='User authorization using telegram',
+    name='v1:auth:telegram-auth',
+)
+async def telegram_auth(
+    request: Request,
+    auth_data: TelegramAuthData,
+    next: str = '/'
 ):
-    params = request.query_params.items()
-    data_check_string = '\n'.join(sorted(f'{x}={y}' for x, y in params if x not in ('hash', 'next')))
-    computed_hash = hmac.new(config.bot_token.get_secret_value.digest(), data_check_string.encode(), 'sha256').hexdigest()
-    is_correct = hmac.compare_digest(computed_hash, query_hash)
-    if not is_correct:
-        return PlainTextResponse('Authorization failed. Please try again', status_code=401)
+    is_correct = check_auth_data(auth_data)
 
-    token = jwt.encode({'alg': 'HS256'}, {'k': user_id}, config.jwt_secret_key.get_secret_value)
-    response = RedirectResponse(next_url)
+    if not is_correct:
+        logger.warning(f'AuthData is incorrect: {auth_data}')
+        return HTTPException(
+            status_code=status.HTTP_401_Unauthorized,
+            detail='Authorization failed. Please try again'
+        )
+
+    token = jwt.encode(
+        {'alg': 'HS256'},
+        {'k': auth_data.id},
+        config.jwt_secret_key.get_secret_value
+    )
+    response = RedirectResponse(next)
     response.set_cookie(key=config.cookie_name, value=token)
+
     return response
 
 

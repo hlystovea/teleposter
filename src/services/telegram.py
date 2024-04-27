@@ -1,7 +1,11 @@
+import hashlib
+import hmac
+
 from httpx import AsyncClient, HTTPError
 
 from core.config import config
 from schema.posts import Post
+from schema.telegram import TelegramAuthData
 
 
 def get_api_url(method: str, token=config.bot_token) -> str:
@@ -28,3 +32,29 @@ async def publish_in_channel(post: Post) -> None:
 
     if not data['ok']:
         raise HTTPError(f'Response: {data}')
+
+
+def check_auth_data(auth_data: TelegramAuthData) -> bool:
+    data_check_string = auth_data.data_check_string
+    secret_key = hashlib.sha256(config.bot_token.encode()).digest()
+
+    auth_data_hash = hmac.new(
+        secret_key, data_check_string.encode(), hashlib.sha256
+    ).hexdigest()
+
+    return hmac.compare_digest(auth_data_hash, auth_data.hash)
+
+
+async def get_admin_ids() -> list[int]:
+    headers = {'Content-Type': 'application/json'}
+    data = {'chat_id': config.channel}
+    url = get_api_url('getChatAdministrators')
+
+    async with AsyncClient() as client:
+        response = await client.post(url, headers=headers, json=data)
+        data = response.json()
+
+    if not data['ok']:
+        raise HTTPError(f'Response: {data}')
+
+    return [member['user']['id'] for member in data['response']]
