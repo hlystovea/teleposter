@@ -32,9 +32,32 @@ footer {
     background-color: #2d2d44;
 }
 
-header nav {
+.nav-bar {
     width: 800px;
-    border: 1px dotted white;
+    padding-top: 5px;
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.logo {
+    display: inline-block;
+    height: 50px;
+}
+
+.nav-menu li {
+    display: flex;
+    margin: 0px 5px;
+}
+
+.nav-menu li:last-child {
+    margin-left: auto;
 }
 
 .posts {

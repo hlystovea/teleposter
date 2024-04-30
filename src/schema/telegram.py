@@ -46,12 +46,11 @@ class TelegramAuthData(BaseModel):
     last_name: str = ''
     username: str
     photo_url: str | None = None
-    auth_date: str
+    auth_date: int
     hash: str
 
     @property
     def data_check_string(self):
-        return (f'auth_date={self.auth_date}\n'
-                f'first_name={self.first_name}\n'
-                f'id={self.id}\n'
-                f'username={self.username}')
+        return '\n'.join(
+            sorted([f'{k}={v}' for k, v in dict(self).items() if k != 'hash'])
+        )

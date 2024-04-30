@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException, status
+from typing import Annotated
+
+from fastapi import APIRouter, HTTPException, Query, status
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse
 from joserfc import jwt
@@ -20,25 +22,25 @@ router = APIRouter(prefix='/auth')
     name='v1:auth:telegram-auth',
 )
 async def telegram_auth(
-    request: Request,
-    auth_data: TelegramAuthData,
-    next: str = '/'
+        request: Request,
+        next_path: Annotated[str, Query(alias='next')] = '/',
 ):
+    auth_data = TelegramAuthData(**request.query_params)
     is_correct = check_auth_data(auth_data)
 
     if not is_correct:
-        logger.warning(f'AuthData is incorrect: {auth_data}')
-        return HTTPException(
-            status_code=status.HTTP_401_Unauthorized,
+        logger.warning(f'Invalid authorization data: {auth_data}')
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Authorization failed. Please try again'
         )
 
     token = jwt.encode(
         {'alg': 'HS256'},
         {'k': auth_data.id},
-        config.jwt_secret_key.get_secret_value
+        config.jwt_secret_key.get_secret_value()
     )
-    response = RedirectResponse(next)
+    response = RedirectResponse(next_path)
     response.set_cookie(key=config.cookie_name, value=token)
 
     return response

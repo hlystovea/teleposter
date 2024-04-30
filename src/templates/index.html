@@ -1,75 +1,54 @@
-<!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <meta charset="utf-8">
-        <title>{{ title }}</title>
-        <meta name="description" content="Telegram channel management service">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="static/css/style.css">
-        <script src="static/js/models/post.class.js" async defer></script>
-        <script src="static/js/services/post.data.class.js" async defer></script>
-    </head>
-    <body class="body">
-        <header>
-            <nav>
-                <ul>Header</ul>
-            </nav>
-        </header>
-        <main>
-            <section>
-                <h2>Новости</h2>
-                <div class="posts">
-                    <p>Нет доступных публикаций</p>
-                </div>
-            </section>
-        </main>
-        <footer>
-            Footer
-        </footer>
-        <template id="post-template">
-            <div class="post">
-                <p class="post-text"></p>
-                <span class="post-status"></span>
-                <button class="btn-publish" name="publishButton" type="button">
-                    Опубликовать
-                </button>
-                <button class="btn-edit" name="editButton" type="button">
-                    Редактировать
-                </button>
-                <button class="btn-delete" name="deleteButton" type="button">
-                    Удалить
-                </button>
-            </div>
-        </template>
-        <template id="post-form">
-            <form action="" method="POST">
-                <textarea class="text-input" name="text" autofocus></textarea>
-                <button class="btn-save" name="saveButton" type="button">
-                    Сохранить
-                </button>
-                <button class="btn-cancel" name="cancelButton" type="button">
-                    Отмена
-                </button>
-            </form>
-        </template>
-        <script>
-            document.addEventListener('DOMContentLoaded', async () => {
-                try {
-                    const posts = await PostData.list();
-                    const postsBlock = document.querySelector('.posts');
-                    postsBlock.replaceChildren();
+{% extends "base.html" %}
+{% block main %}
+<section>
+    <h2>Новости</h2>
+    <div class="posts">
+        <p>Нет доступных публикаций</p>
+    </div>
+</section>
+ 
+<template id="post-template">
+    <div class="post">
+        <p class="post-text"></p>
+        <span class="post-status"></span>
+        <button class="btn-publish" name="publishButton" type="button">
+            Опубликовать
+        </button>
+        <button class="btn-edit" name="editButton" type="button">
+            Редактировать
+        </button>
+        <button class="btn-delete" name="deleteButton" type="button">
+            Удалить
+        </button>
+    </div>
+</template>
 
-                    posts.forEach(data => {
-                        const post = new Post(data);
-                        post.appendTo(postsBlock);
-                    });
-                } catch (error) {
-                    console.log('Error: ', error);
-                }
+<template id="post-form">
+    <form action="" method="POST">
+        <textarea class="text-input" name="text" autofocus></textarea>
+        <button class="btn-save" name="saveButton" type="button">
+            Сохранить
+        </button>
+        <button class="btn-cancel" name="cancelButton" type="button">
+            Отмена
+        </button>
+    </form>
+</template>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const posts = await PostData.list();
+            const postsBlock = document.querySelector('.posts');
+            postsBlock.replaceChildren()
+
+            posts.forEach(data => {
+                const post = new Post(data);
+                post.appendTo(postsBlock);
             });
-        </script>
-    </body>
-</html>
+        } catch (error) {
+            console.log('Error: ', error);
+        }
+    });
+</script>
+{% endblock %}
