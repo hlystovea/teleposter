@@ -1,16 +1,18 @@
 import hashlib
 import hmac
+from typing import AsyncGenerator
 
+from fastapi import HTTPException
 from httpx import AsyncClient, HTTPError
-from async_lru import alru_cache
 
 from core.config import config
 from schema.posts import Post
-from schema.telegram import TelegramAuthData
+from schema.telegram import TelegramMedia, TelegramAuthData
 
 
-def get_api_url(method: str, token=config.bot_token) -> str:
-    return f'https://api.telegram.org/bot{token.get_secret_value()}/{method}'
+def get_api_url(method: str) -> str:
+    bot_token = config.bot_token.get_secret_value()
+    return f'https://api.telegram.org/bot{bot_token}/{method}'
 
 
 async def publish_in_channel(post: Post) -> None:
@@ -45,7 +47,6 @@ def check_auth_data(auth_data: TelegramAuthData) -> bool:
     return hmac.compare_digest(auth_data_hash, auth_data.hash)
 
 
-@alru_cache(maxsize=32)
 async def get_admin_ids() -> list[int]:
     headers = {'Content-Type': 'application/json'}
     data = {'chat_id': config.channel}
@@ -59,3 +60,31 @@ async def get_admin_ids() -> list[int]:
         raise HTTPError(f'Response: {data}')
 
     return [member['user']['id'] for member in data['result']]
+
+
+async def get_file(file_id: str) -> TelegramMedia:
+    headers = {'Content-Type': 'application/json'}
+    data = {'file_id': file_id}
+    url = get_api_url('getFile')
+
+    async with AsyncClient() as client:
+        response = await client.post(url, headers=headers, json=data)
+        data = response.json()
+
+    if not data['ok']:
+        raise HTTPException(
+            status_code=data['error_code'],
+            detail=data['description']
+        )
+
+    return TelegramMedia(**data['result'])
+
+
+async def stream_file(file_path: str) -> AsyncGenerator:
+    bot_token = config.bot_token.get_secret_value()
+    url = f'https://api.telegram.org/file/bot{bot_token}/{file_path}'
+
+    async with AsyncClient() as client:
+        async with client.stream('GET', url) as response:
+            async for chunk in response.aiter_bytes():
+                yield chunk

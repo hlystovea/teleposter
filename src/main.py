@@ -9,6 +9,7 @@ from joserfc.errors import JoseError
 
 from core.config import config
 from routes.v1.auth import router as v1_auth_router
+from routes.v1.files import router as v1_files_router
 from routes.v1.posts import router as v1_posts_router
 from services.telegram import get_admin_ids
 
@@ -16,6 +17,7 @@ from services.telegram import get_admin_ids
 app = FastAPI(title=config.title, redoc_url=None)
 
 app.include_router(v1_auth_router)
+app.include_router(v1_files_router)
 app.include_router(v1_posts_router)
 
 templates = Jinja2Templates(directory='./src/templates')

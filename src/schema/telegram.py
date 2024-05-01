@@ -15,6 +15,7 @@ class TelegramMedia(BaseModel):
     file_id: str
     file_unique_id: str
     file_size: int | None = None
+    file_path: str | None = None
 
 
 class TelegramPhotoSize(TelegramMedia):

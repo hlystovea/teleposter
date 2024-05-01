@@ -2,10 +2,11 @@ class Post {
     #status;
     #id;
 
-    constructor ({id, status, text}) {
+    constructor ({id, status, text, photo = null}) {
         this.#id = id;
         this.#status = status;
         this.text = text;
+        this.photo = photo;
     }
 
     renderPost () {
@@ -15,6 +16,12 @@ class Post {
         const deleteButton = post.querySelector('.btn-delete');
     
         post.querySelector('.post-text').textContent = this.text;
+
+        if (this.photo) {
+            const image = document.createElement('img');
+            image.src = `api/v1/files/${this.photo.at(-1).file_id}`;
+            post.querySelector('.post-photo').appendChild(image);
+        }
         publishButton.onclick = this.publishButtonHandler.bind(this);
         editButton.onclick = this.editButtonHandler.bind(this);
         deleteButton.onclick = this.deleteButtonHandler.bind(this);

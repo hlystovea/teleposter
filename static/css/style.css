@@ -69,6 +69,10 @@ footer {
 }
 
 .post {
-    min-width: 600px;
+    width: 600px;
     border: 1px dotted black;
+}
+
+.post-photo img {
+    width: 100%;
 }
