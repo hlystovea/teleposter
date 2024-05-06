@@ -15,6 +15,7 @@ class Post(TelegramMessage):
 
 class RequestPost(BaseModel):
     text: str | None = None
+    caption: str | None = None
 
 
 class ResponsePost(Post):

@@ -2,11 +2,12 @@ class Post {
     #status;
     #id;
 
-    constructor ({id, status, text, photo = null}) {
+    constructor ({id, status, text, caption, photo = null}) {
         this.#id = id;
         this.#status = status;
         this.text = text;
         this.photo = photo;
+        this.caption = caption;
     }
 
     renderPost () {
@@ -15,7 +16,7 @@ class Post {
         const editButton = post.querySelector('.btn-edit');
         const deleteButton = post.querySelector('.btn-delete');
     
-        post.querySelector('.post-text').textContent = this.text;
+        post.querySelector('.post-text').textContent = this.text || this.caption;
 
         if (this.photo) {
             const image = document.createElement('img');
@@ -34,7 +35,12 @@ class Post {
         const saveButton = form.querySelector('.btn-save');
         const cancelButton = form.querySelector('.btn-cancel');
     
-        form.querySelector('.text-input').value = this.text;
+        if (this.caption) {
+            form.querySelector('.text-input').setAttribute('name', 'caption');
+        }
+
+        form.querySelector('.text-input').value = this.text || this.caption;
+
         saveButton.onclick = this.submitFormHandler.bind(this);
         cancelButton.onclick = this.cancelButtonHandler.bind(this);
     
