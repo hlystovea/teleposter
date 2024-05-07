@@ -11,12 +11,13 @@ class Post(TelegramMessage):
     user_name: str | None = None
     created_at: datetime = Field(default_factory=datetime.now)
     status: Literal['non-moderated', 'published'] = 'non-moderated'
+    files: list[str] = []
 
 
 class RequestPost(BaseModel):
     text: str | None = None
     caption: str | None = None
-    files: list[str]
+    files: list[str] = []
 
 
 class ResponsePost(Post):

@@ -39,4 +39,4 @@ async def get(file_id: str):
 )
 async def upload_file(file: UploadFile):
     file_name = await save_file(file=file)
-    return File(file_unique_id=file_name.split('.')[0])
+    return File(file_name=file_name)

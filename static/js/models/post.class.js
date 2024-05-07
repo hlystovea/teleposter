@@ -2,13 +2,13 @@ class Post {
     #status;
     #id;
 
-    constructor ({id, status, text, caption, photo = null}) {
+    constructor ({id, status, text, caption, files, photo = null}) {
         this.#id = id;
         this.#status = status;
         this.text = text;
         this.photo = photo;
         this.caption = caption;
-        this.files = [];
+        this.files = files;
     }
 
     renderPost () {
@@ -27,7 +27,7 @@ class Post {
         publishButton.onclick = this.publishButtonHandler.bind(this);
         editButton.onclick = this.editButtonHandler.bind(this);
         deleteButton.onclick = this.deleteButtonHandler.bind(this);
-    
+
         return post;
     }
 
@@ -36,7 +36,7 @@ class Post {
         const inputFile = form.querySelector('input');
         const saveButton = form.querySelector('.btn-save');
         const cancelButton = form.querySelector('.btn-cancel');
-    
+
         if (this.caption) {
             form.querySelector('.text-input').setAttribute('name', 'caption');
         }
@@ -46,8 +46,7 @@ class Post {
         inputFile.onchange = this.changeInputFileHandler.bind(this);
         saveButton.onclick = this.submitFormHandler.bind(this);
         cancelButton.onclick = this.cancelButtonHandler.bind(this);
-    
-        this.files = [];
+
         return form;
     }
 
@@ -63,7 +62,7 @@ class Post {
                 console.log('File upload error')
                 return
             }
-            this.files.push(uploadedFile.file_unique_id)
+            this.files.push(uploadedFile.file_name)
         } else {
           console.log('Можно загружать только изображения')
           return false
