@@ -2,6 +2,10 @@
 {% block main %}
 <section>
     <h2>Новости</h2>
+    <form action="/api/v1/files/upload/" enctype="multipart/form-data" method="post">
+        <input name="files" type="file" multiple>
+        <input type="submit">
+    </form>
     <div class="posts">
         <p>Нет доступных публикаций</p>
     </div>
