@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -12,6 +14,8 @@ class Settings(BaseSettings):
     mongo_url: str = ...
     jwt_secret_key: SecretStr = ...
     cookie_name: str = 'auth-token'
+    base_dir: Path = Path(__file__).resolve().parent.parent.parent
+    media_root: Path = base_dir / 'media'
 
     model_config = SettingsConfigDict(
         env_file='.env',

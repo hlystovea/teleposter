@@ -24,6 +24,8 @@ services:
     container_name: teleposter_backend
     restart: unless-stopped
     command: python3 src/main.py
+    volumes:
+      - media_value:/teleposter/media/
     depends_on:
       - mongo
     env_file:
@@ -54,9 +56,11 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./static:/var/html/static
+      - media_value:/var/html/media/
     env_file:
       - ./.env
   
 
 volumes:
   mongodb-data:
+  media_value:
