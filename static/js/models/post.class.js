@@ -8,6 +8,7 @@ class Post {
         this.text = text;
         this.photo = photo;
         this.caption = caption;
+        this.files = [];
     }
 
     renderPost () {
@@ -32,6 +33,7 @@ class Post {
 
     renderForm () {
         const form = document.querySelector('#post-form').content.cloneNode(true);
+        const inputFile = form.querySelector('input');
         const saveButton = form.querySelector('.btn-save');
         const cancelButton = form.querySelector('.btn-cancel');
     
@@ -41,14 +43,31 @@ class Post {
 
         form.querySelector('.text-input').value = this.text || this.caption;
 
+        inputFile.onchange = this.changeInputFileHandler.bind(this);
         saveButton.onclick = this.submitFormHandler.bind(this);
         cancelButton.onclick = this.cancelButtonHandler.bind(this);
     
+        this.files = [];
         return form;
     }
 
     appendTo (parent) {
         parent.appendChild(this.renderPost());
+    }
+
+    async changeInputFileHandler (event) {
+        const file = event.target.closest('input').files?.[0]
+        if (file && file.type.startsWith('image/')) {
+            const uploadedFile = await uploadFile(file);
+            if (!uploadFile) {
+                console.log('File upload error')
+                return
+            }
+            this.files.push(uploadedFile.file_unique_id)
+        } else {
+          console.log('Можно загружать только изображения')
+          return false
+        }
     }
 
     editButtonHandler (event) {
@@ -65,8 +84,10 @@ class Post {
         event.preventDefault();
 
         const form = event.target.closest('form');
-        const formData = new FormData(document.querySelector('form'));
+        const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
+
+        data['files'] = this.files;
 
         try {
             const post = await PostData.update(this.#id, data);
@@ -97,4 +118,26 @@ class Post {
             console.log('Error: ', error);
         }
     }
+}
+
+async function uploadFile(file) {
+    const fileForm = new FormData()
+    fileForm.append('file', file)
+
+    const url = '/api/v1/files/upload/'
+    const options = {
+        method: 'POST',
+        body: fileForm
+    };
+    return fetch(url, options)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(response.text());
+        }
+        return response.json();
+    })
+    .catch(error => {
+        console.log('Error: ', error);
+        return null;
+    });
 }

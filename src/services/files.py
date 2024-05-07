@@ -2,7 +2,7 @@ import aiofiles
 import random
 import string
 
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException
 
 from core.config import config
 from core.logger import logger
@@ -13,7 +13,7 @@ def generate_random_string(length: int = 16):
     return ''.join(random.choice(all_symbols) for _ in range(length))
 
 
-async def save_file(file: UploadFile):
+async def save_file(file: UploadFile) -> str:
     media_dir = config.media_root
     file_name = f'{generate_random_string()}.{file.filename.split(".")[-1]}'
 
@@ -22,5 +22,8 @@ async def save_file(file: UploadFile):
             while content := await file.read(64 * 1000):
                 await out_file.write(content)
 
+        return file_name
+
     except OSError as error:
         logger.error(f'An error occured: {error}')
+        raise HTTPException(status_code=500, detail='Internal server error')

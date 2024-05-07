@@ -2,10 +2,6 @@
 {% block main %}
 <section>
     <h2>Новости</h2>
-    <form action="/api/v1/files/upload/" enctype="multipart/form-data" method="post">
-        <input name="files" type="file" multiple>
-        <input type="submit">
-    </form>
     <div class="posts">
         <p>Нет доступных публикаций</p>
     </div>
@@ -31,6 +27,7 @@
 <template id="post-form">
     <form action="" method="POST">
         <textarea class="text-input" name="text" autofocus></textarea>
+        <input type="file" accept="image/*">
         <button class="btn-save" name="saveButton" type="button">
             Сохранить
         </button>

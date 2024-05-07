@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 
+from schema.files import File
 from services.files import save_file
 from services.telegram import get_file, stream_file
 
@@ -11,8 +12,8 @@ router = APIRouter(prefix='/api/v1/files')
 @router.get(
     '/{file_id}',
     response_class=StreamingResponse,
-    summary='get a post',
-    description='Responds a post',
+    summary='get a file',
+    description='Returns the requested file',
     name='v1:files:file-retrieve',
 )
 async def get(file_id: str):
@@ -31,12 +32,11 @@ async def get(file_id: str):
 
 @router.post(
     '/upload/',
-    summary='upload files',
-    description='Upload files',
+    response_model=File,
+    summary='upload the file',
+    description='Uploads the file to the server',
     name='v1:files:file-upload',
 )
-async def upload_files(files: list[UploadFile]):
-    for file in files:
-        await save_file(file=file)
-
-    return {'filenames': [file.filename for file in files]}
+async def upload_file(file: UploadFile):
+    file_name = await save_file(file=file)
+    return File(file_unique_id=file_name.split('.')[0])
