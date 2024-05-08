@@ -1,6 +1,6 @@
 import hashlib
 import hmac
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator
 
 from fastapi import HTTPException
 from httpx import AsyncClient, HTTPError
@@ -80,11 +80,13 @@ async def get_file(file_id: str) -> TelegramMedia:
     return TelegramMedia(**data['result'])
 
 
-async def stream_file(file_path: str) -> AsyncGenerator:
+async def stream_file(
+    file_path: str, chunk_size: int | None = None
+) -> AsyncGenerator[bytes, Any]:
     bot_token = config.bot_token.get_secret_value()
     url = f'https://api.telegram.org/file/bot{bot_token}/{file_path}'
 
     async with AsyncClient() as client:
         async with client.stream('GET', url) as response:
-            async for chunk in response.aiter_bytes():
+            async for chunk in response.aiter_bytes(chunk_size):
                 yield chunk

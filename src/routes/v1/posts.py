@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from pydantic import ValidationError
 from pymongo.errors import InvalidOperation
 from pymongo.results import DeleteResult, InsertOneResult, UpdateResult
@@ -11,6 +11,7 @@ from db.mongo import posts
 from httpx import HTTPError
 from schema.posts import Post, RequestPost, ResponsePost, ResponseMessage
 from services.telegram import publish_in_channel
+from services.files import save_media
 
 
 router = APIRouter(prefix='/api/v1/posts', tags=['posts'])
@@ -56,7 +57,11 @@ async def get_post(post_id: str, posts=Depends(posts)):
     description='Creates a new non-moderated post',
     name='v1:posts:post-create',
 )
-async def create_post(post: Post, posts=Depends(posts)):
+async def create_post(
+    post: Post, background_tasks: BackgroundTasks, posts=Depends(posts)
+):
+    post = await save_media(post)
+
     try:
         result: InsertOneResult = await posts.insert_one(post.model_dump())
 
