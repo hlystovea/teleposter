@@ -9,7 +9,6 @@ from pydantic import ValidationError
 
 from core.config import config
 from core.logger import logger
-from main import app
 from schema.telegram import TelegramMessage
 
 

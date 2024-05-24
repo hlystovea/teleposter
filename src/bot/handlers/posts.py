@@ -6,7 +6,7 @@ from aiogram.types import Message, Chat
 from core.config import config
 from core.logger import logger
 from core.messages import MSG
-from bot.services.posts import save_to_db, send_to_administrators
+from bot.services.posts import send_to_administrators
 
 
 router = Router()
