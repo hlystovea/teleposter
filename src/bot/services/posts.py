@@ -30,19 +30,3 @@ async def send_to_administrators(message: Message, bot: Bot) -> None:
         for admin in admins:
             if not admin.user.is_bot:
                 tg.create_task(forward_message(message, admin.user.id))
-
-
-async def save_to_db(message: Message) -> None:
-    try:
-        url = f'{config.api_url}{app.url_path_for("v1:posts:post-create")}'
-        post = TelegramMessage.model_validate(message, from_attributes=True)
-        data = post.model_dump(exclude={'create_at'})
-
-        async with httpx.AsyncClient() as client:
-            response = await client.post(url, json=data)
-            response.raise_for_status()
-
-    except (TypeError, KeyError, ValidationError, HTTPError) as error:
-        logger.error(
-            f'An error occurred while saving the message: {repr(error)}'
-        )
