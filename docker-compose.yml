@@ -38,15 +38,20 @@ services:
           target: /teleposter/src
           action: sync
 
-  bot:
-    build: .
-    container_name: teleposter_bot
-    restart: unless-stopped
-    command: python3 src/bot.py
+  frontend:
+    build:
+      context: ./frontend
+    container_name: teleposter_frontend
+    volumes:
+      - react_build:/teleposter/build/
     depends_on:
       - backend
-    env_file:
-      - ./.env
+    develop:
+      watch: 
+        - path: ./frontend/src
+          action: rebuild
+        - path: ./frontend/public
+          action: rebuild
 
   nginx:
     image: nginx:latest
@@ -55,7 +60,7 @@ services:
       - '80:80'
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./static:/var/html/static
+      - react_build:/usr/share/nginx/html
       - media_value:/var/html/media/
     env_file:
       - ./.env
@@ -64,3 +69,4 @@ services:
 volumes:
   mongodb-data:
   media_value:
+  react_build:
