@@ -1,14 +1,9 @@
 import { useQuery } from 'react-query';
+import { postList } from '../api/posts';
 import Post from './Post';
 
 function PostsFeed() {
-  const { isLoading, error, data } = useQuery(
-    'posts',
-    () =>
-      fetch(
-        'http://127.0.0.1/api/v1/posts/'
-      ).then((response) => response.json())
-  );
+  const { isLoading, error, data } = useQuery('posts', postList);
 
   if (isLoading) return <p>Загрузка...</p>;
     
