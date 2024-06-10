@@ -2,7 +2,7 @@ from asyncio import TaskGroup
 
 import httpx
 from aiogram import Bot
-from aiogram.exceptions import TelegramBadRequest
+from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 from aiogram.types import Message
 from httpx import HTTPError
 from pydantic import ValidationError
@@ -17,7 +17,7 @@ async def forward_message(message: Message, chat_id: int | str) -> None:
     try:
         await message.forward(chat_id)
 
-    except TelegramBadRequest as error:
+    except (TelegramBadRequest, TelegramForbiddenError) as error:
         logger.error(
             f'An error occurred while forwarding the message: {repr(error)}'
         )
