@@ -36,10 +36,6 @@ const postRequest = async(url, method = 'GET', data = undefined) => {
             throw new Error(response.text());
         }
         return response.json();
-    })
-    .catch(error => {
-        console.log('Error: ', error);
-        return null;
     });
 };
 
