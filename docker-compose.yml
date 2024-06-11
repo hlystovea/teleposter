@@ -8,17 +8,6 @@ services:
     volumes:
       - mongodb-data:/data/db
 
-  mongo-express:
-    image: mongo-express
-    container_name: teleposter_mongo_express
-    restart: unless-stopped
-    ports:
-      - 8081:8081
-    depends_on:
-      - mongo
-    env_file:
-      - ./.env
-
   backend:
     build: .
     container_name: teleposter_backend
@@ -30,13 +19,18 @@ services:
       - mongo
     env_file:
       - ./.env
-    develop:
-      watch: 
-        - path: ./requirements.txt
-          action: rebuild
-        - path: ./src
-          target: /teleposter/src
-          action: sync
+
+  bot:
+    build: .
+    container_name: teleposter_bot
+    restart: unless-stopped
+    command: python3 src/bot.py
+    depends_on:
+      - backend
+    env_file:
+      - ./.env
+    environment:
+      - API_URL=http://backend:8000
 
   frontend:
     build:
@@ -46,12 +40,8 @@ services:
       - react_build:/teleposter/build/
     depends_on:
       - backend
-    develop:
-      watch: 
-        - path: ./frontend/src
-          action: rebuild
-        - path: ./frontend/public
-          action: rebuild
+    environment:
+      - REACT_APP_API_URL=/api/v1/
 
   nginx:
     image: nginx:latest
