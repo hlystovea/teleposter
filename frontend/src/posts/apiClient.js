@@ -8,15 +8,15 @@ const postRetrieve = async (id) => {
     return postRequest(baseUrl + id);
 }
 
-const postUpdate = async (id, data) => {  
+const updatePost = async (id, data) => {
     return postRequest(baseUrl + id, 'PATCH', data);
 }
 
-const postPublish = async (id) => {
+const publishPost = async (id) => {
     return postRequest(baseUrl + id + '/publish', 'POST');
 }
 
-const postDelete = async (id) => {
+const deletePost = async (id) => {
     return postRequest(baseUrl + id, 'DELETE');
 }
 
@@ -35,8 +35,8 @@ const postRequest = async(url, method = 'GET', data = undefined) => {
         if (!response.ok) {
             throw new Error(response.text());
         }
-        return response.json();
+        return (response.status !== 204 ? response.json() : undefined);
     });
 };
 
-export { postList, postRetrieve, postUpdate, postPublish, postDelete };
+export { postList, postRetrieve, updatePost, publishPost, deletePost };

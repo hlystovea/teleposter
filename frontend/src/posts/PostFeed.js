@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { postList } from '../api/posts';
+import { postList } from './apiClient';
 import Post from './Post';
 
 function PostsFeed() {
