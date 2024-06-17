@@ -3,7 +3,7 @@ import { useDeletePost } from './useDeletePost';
 import { usePublishPost } from './usePublishPost';
 import { useUpdatePost } from './useUpdatePost';
 
-const baseUrl = process.env.REACT_APP_API_URL;
+const mediaUrl = process.env.REACT_APP_MEDIA_URL;
 
 
 function Post({post}) {
@@ -48,7 +48,7 @@ const EditForm = ({post, setIsEditing}) => {
   )
 }
 const PostCard = ({post, setIsEditing}) => {
-  const { id, text, status, photo, caption } = post;
+  const { id, text, status, photo, caption, files } = post;
   const deletePost = useDeletePost();
   const publishPost = usePublishPost();
   const onPublishClick = () => {
@@ -63,7 +63,7 @@ const PostCard = ({post, setIsEditing}) => {
   return (
     <>
       <div className="post-photo">
-        <img src={photo && `${baseUrl}files/${photo.at(-1).file_id}`} alt="Фото" /> 
+        <img src={files && `${mediaUrl}${files[0]}`} alt="Фото" /> 
       </div>
       <p className="post-text">{text || caption}</p>
       <span className="post-status">{status}</span>

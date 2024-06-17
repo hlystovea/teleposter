@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   useMutation,
   useQueryClient,
@@ -46,6 +47,7 @@ const uploadFile = async (file) => {
 }
 
 function PostForm({ text="", caption="" }) {
+  const [fileValue, setFileValue] = useState("");
   const queryClient = useQueryClient();
 
   const mutation = useMutation(createPost, {
@@ -58,21 +60,23 @@ function PostForm({ text="", caption="" }) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+    data.files = data.files.split(',');
     mutation.mutate(data);
   };
 
   const onChangeFileInput = async (event) => {
-    const file = event.target.closest('input').files?.[0]
+    const file = event.target.closest('input').files?.[0];
     if (file && file.type.startsWith('image/')) {
         const uploadedFile = await uploadFile(file);
         if (!uploadFile) {
-            console.log('File upload error')
-            return
+            console.log('File upload error');
+            return ;
         }
-        console.log('Файл загружен')
+        console.log('Файл загружен');
+        setFileValue(uploadedFile.file_name);
     } else {
-      console.log('Можно загружать только изображения')
-      return false
+      console.log('Можно загружать только изображения');
+      return false;
     }
   };
 
@@ -80,6 +84,7 @@ function PostForm({ text="", caption="" }) {
     <form action="" method="POST" onSubmit={onSubmit} value={text || caption}>
         <textarea className="text-input" name="text" autoFocus></textarea>
         <input name="file" type="file" accept="image/*" onChange={onChangeFileInput} />
+        <input name="files" type="hidden" value={fileValue} />
         <button className="btn-save" name="saveButton" type="submit">
             Сохранить
         </button>
