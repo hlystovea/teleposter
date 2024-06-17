@@ -37,6 +37,13 @@ const EditForm = ({post, setIsEditing}) => {
   };
   return (
     <form action="" method="POST" onSubmit={onSubmit}>
+      {post.files.map((file) => {
+        return (
+          <div className="post-photo">
+            <img src={`${mediaUrl}${file}`} alt="Фото" /> 
+          </div>
+        )
+      })}
       <textarea className="text-input" name="text" value={textValue} onChange={onTextChange} autoFocus />
       <button className="btn-save" name="saveButton" type="submit">
           Сохранить
@@ -62,11 +69,13 @@ const PostCard = ({post, setIsEditing}) => {
   };
   return (
     <>
-      {files.length ? (
-        <div className="post-photo">
-          <img src={files && `${mediaUrl}${files[0]}`} alt="Фото" /> 
-        </div>
-      ) : ''}
+      {files.map((file) => {
+        return (
+          <div className="post-photo">
+            <img src={`${mediaUrl}${file}`} alt="Фото" /> 
+          </div>
+        )
+      })}
       <p className="post-text">{text || caption}</p>
       <span className="post-status">{status}</span>
       <button className="btn-publish" name="publishButton" type="button" onClick={onPublishClick}>
