@@ -62,9 +62,11 @@ const PostCard = ({post, setIsEditing}) => {
   };
   return (
     <>
-      <div className="post-photo">
-        <img src={files && `${mediaUrl}${files[0]}`} alt="Фото" /> 
-      </div>
+      {files.length ? (
+        <div className="post-photo">
+          <img src={files && `${mediaUrl}${files[0]}`} alt="Фото" /> 
+        </div>
+      ) : ''}
       <p className="post-text">{text || caption}</p>
       <span className="post-status">{status}</span>
       <button className="btn-publish" name="publishButton" type="button" onClick={onPublishClick}>

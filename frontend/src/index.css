@@ -16,7 +16,7 @@ code {
 
 #root {
   display: grid;
-  grid-template-columns: auto 800px auto;
+  grid-template-columns: auto minmax(600px, 800px) auto;
   grid-template-rows: 60px 1fr 200px;
   grid-template-areas:
     "header header header"
@@ -44,7 +44,7 @@ footer {
 }
 
 .nav-bar {
-  width: 800px;
+  width: 100%;
   padding-top: 5px;
 }
 
@@ -82,8 +82,10 @@ footer {
 .post {
   width: 600px;
   border: 1px dotted black;
+  border-radius: 15px;
 }
 
 .post-photo img {
   width: 100%;
+  border-radius: 15px 15px 0 0;
 }
