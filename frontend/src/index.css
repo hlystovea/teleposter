@@ -79,6 +79,10 @@ footer {
   row-gap: 16px;
 }
 
+.post-image {
+  width: 100%;
+}
+
 .card {
   width: 600px;
   border: 1px solid gray;

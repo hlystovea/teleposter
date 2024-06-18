@@ -10,8 +10,19 @@ const mediaUrl = process.env.REACT_APP_MEDIA_URL;
 
 function Post({post}) {
   const [isEditing, setIsEditing] = useState(false);
+  const photos = post.files.map((file, index) => {
+    const key = file + index;
+    const url = `${mediaUrl}${file}`;
+    const alt = file;
+    return {
+      key: key,
+      url: url,
+      alt: alt,
+    };
+  })
   return (
     <Card>
+      <Gallery photos={photos} />
       {isEditing ? (
         <EditForm post={post} setIsEditing={setIsEditing} />
       ) : (
@@ -39,13 +50,6 @@ const EditForm = ({post, setIsEditing}) => {
   };
   return (
     <form action="" method="POST" onSubmit={onSubmit}>
-      {post.files.map((file) => {
-        return (
-          <div key={file} className="post-photo">
-            <img src={`${mediaUrl}${file}`} alt="Фото" /> 
-          </div>
-        )
-      })}
       <textarea className="text-input" name="text" value={textValue} onChange={onTextChange} autoFocus />
       <button className="btn-save" name="saveButton" type="submit">
           Сохранить
@@ -69,22 +73,8 @@ const PostCard = ({post, setIsEditing}) => {
   const onDeleteClick = () => {
     deletePost.mutate(post.id);
   };
-  const photos = files.map((file) => {
-    const key = file;
-    const url = `${mediaUrl}${file}`;
-    const className = '';
-    const alt = file;
-    return {
-      key: key,
-      url: url,
-      className: className,
-      alt: alt,
-    };
-  })
-  console.log(photos)
   return (
     <>
-      <Gallery photos={photos} />
       <p className="post-text">{text || caption}</p>
       <span className="post-status">{status}</span>
       <button className="btn-publish" name="publishButton" type="button" onClick={onPublishClick}>

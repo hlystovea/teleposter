@@ -1,17 +1,25 @@
 function Gallery({photos = [], className = 'image-gallery'}) {
-  if (photos.length === 0) {
-    return ;
-  }
-  const items = photos.map((photo) => {
+  switch (photos.length) {
+    case 0:
+      return ;
+
+    case 1:
       return (
-        <img key={photo.key} src={photo.url} className={photo.className} alt={photo.alt} />
-      )
-    });
-  return (
-    <div className={className}>
-      {items}
-    </div>
-  );
+        <img className='post-image' key={photos[0].key} src={photos[0].url} alt={photos[0].alt} />
+      );
+
+    default:
+      const items = photos.map((photo) => {
+        return (
+          <img key={photo.key} src={photo.url} alt={photo.alt} />
+        )
+      });
+      return (
+        <div className={className}>
+          {items}
+        </div>
+      );
+  }
 }
 
 export default Gallery;
