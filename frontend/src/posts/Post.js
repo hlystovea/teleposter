@@ -39,7 +39,7 @@ const EditForm = ({post, setIsEditing}) => {
     <form action="" method="POST" onSubmit={onSubmit}>
       {post.files.map((file) => {
         return (
-          <div className="post-photo">
+          <div key={file} className="post-photo">
             <img src={`${mediaUrl}${file}`} alt="Фото" /> 
           </div>
         )
@@ -71,7 +71,7 @@ const PostCard = ({post, setIsEditing}) => {
     <>
       {files.map((file) => {
         return (
-          <div className="post-photo">
+          <div key={file} className="post-photo">
             <img src={`${mediaUrl}${file}`} alt="Фото" /> 
           </div>
         )
