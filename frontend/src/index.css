@@ -45,6 +45,7 @@ footer {
 
 .nav-bar {
   width: 100%;
+  max-width: 800px;
   padding-top: 5px;
 }
 
