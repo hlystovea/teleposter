@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDeletePost } from './useDeletePost';
 import { usePublishPost } from './usePublishPost';
 import { useUpdatePost } from './useUpdatePost';
+import Gallery from '../common/Gallery';
 
 const mediaUrl = process.env.REACT_APP_MEDIA_URL;
 
@@ -67,15 +68,22 @@ const PostCard = ({post, setIsEditing}) => {
   const onDeleteClick = () => {
     deletePost.mutate(post.id);
   };
+  const photos = files.map((file) => {
+    const key = file;
+    const url = `${mediaUrl}${file}`;
+    const className = '';
+    const alt = file;
+    return {
+      key: key,
+      url: url,
+      className: className,
+      alt: alt,
+    };
+  })
+  console.log(photos)
   return (
     <>
-      {files.map((file) => {
-        return (
-          <div key={file} className="post-photo">
-            <img src={`${mediaUrl}${file}`} alt="Фото" /> 
-          </div>
-        )
-      })}
+      <Gallery photos={photos} />
       <p className="post-text">{text || caption}</p>
       <span className="post-status">{status}</span>
       <button className="btn-publish" name="publishButton" type="button" onClick={onPublishClick}>
