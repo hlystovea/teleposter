@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDeletePost } from './useDeletePost';
 import { usePublishPost } from './usePublishPost';
 import { useUpdatePost } from './useUpdatePost';
+import Card from '../common/Card';
 import Gallery from '../common/Gallery';
 
 const mediaUrl = process.env.REACT_APP_MEDIA_URL;
@@ -10,13 +11,13 @@ const mediaUrl = process.env.REACT_APP_MEDIA_URL;
 function Post({post}) {
   const [isEditing, setIsEditing] = useState(false);
   return (
-    <div key={post.id} className="post">
+    <Card>
       {isEditing ? (
         <EditForm post={post} setIsEditing={setIsEditing} />
       ) : (
         <PostCard post={post} setIsEditing={setIsEditing} />
       )}
-    </div>
+    </Card>
   );
 }
 

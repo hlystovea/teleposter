@@ -3,6 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from 'react-query';
+import Card from '../common/Card';
 
 const base_url = process.env.REACT_APP_API_URL;
 
@@ -81,17 +82,19 @@ function PostForm({ text="", caption="" }) {
   };
 
   return (
-    <form action="" method="POST" onSubmit={onSubmit} value={text || caption}>
-        <textarea className="text-input" name="text" autoFocus></textarea>
-        <input name="file" type="file" accept="image/*" onChange={onChangeFileInput} />
-        <input name="files" type="hidden" value={fileValue} />
-        <button className="btn-save" name="saveButton" type="submit">
-            Сохранить
-        </button>
-        <button className="btn-cancel" name="cancelButton" type="button">
-            Отмена
-        </button>
-    </form>
+    <Card>
+      <form action="" method="POST" onSubmit={onSubmit} value={text || caption}>
+          <textarea className="text-input" name="text" autoFocus></textarea>
+          <input name="file" type="file" accept="image/*" onChange={onChangeFileInput} />
+          <input name="files" type="hidden" value={fileValue} />
+          <button className="btn-save" name="saveButton" type="submit">
+              Сохранить
+          </button>
+          <button className="btn-cancel" name="cancelButton" type="button">
+              Отмена
+          </button>
+      </form>
+    </Card>
   );
 }
 

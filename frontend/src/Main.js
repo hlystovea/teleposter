@@ -6,7 +6,6 @@ function Main() {
     <main>
       <section>
         <h2>Новости</h2>
-        <PostForm />
         <PostsFeed />
       </section>
     </main>

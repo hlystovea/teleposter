@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import { postList } from './apiClient';
 import Post from './Post';
+import PostForm from './PostForm';
 
 function PostsFeed() {
   const { isLoading, error, data } = useQuery('posts', postList);
@@ -19,6 +20,7 @@ function PostsFeed() {
 
   return (
     <div className="posts">
+      <PostForm />
       {postCards.length !== 0 ? postCards : emptyMessage}
     </div>
   );

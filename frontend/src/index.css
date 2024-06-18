@@ -79,7 +79,7 @@ footer {
   row-gap: 16px;
 }
 
-.post {
+.card {
   width: 600px;
   border: 1px solid gray;
   border-radius: 16px;
