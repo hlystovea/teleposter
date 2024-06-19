@@ -11,13 +11,10 @@ const mediaUrl = process.env.REACT_APP_MEDIA_URL;
 function Post({post}) {
   const [isEditing, setIsEditing] = useState(false);
   const photos = post.files.map((file, index) => {
-    const key = file + index;
-    const url = `${mediaUrl}${file}`;
-    const alt = file;
     return {
-      key: key,
-      url: url,
-      alt: alt,
+      key: file + index,
+      url: `${mediaUrl}${file}`,
+      alt: file,
     };
   })
   return (
@@ -46,7 +43,10 @@ const EditForm = ({post, setIsEditing}) => {
     setIsEditing(false);
   };
   const onTextChange = (event) => {
-    setTextValue(event.target.value);
+    const input = event.target;
+    setTextValue(input.value);
+    input.style.height = '1px';
+    input.style.height = input.scrollHeight + 'px';
   };
   return (
     <form action="" method="POST" onSubmit={onSubmit}>
@@ -76,7 +76,6 @@ const PostCard = ({post, setIsEditing}) => {
   return (
     <>
       <p className="post-text">{text || caption}</p>
-      <span className="post-status">{status}</span>
       <button className="btn-publish" name="publishButton" type="button" onClick={onPublishClick}>
         Опубликовать
       </button>
