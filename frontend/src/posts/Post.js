@@ -30,7 +30,8 @@ function Post({post}) {
 }
 
 const EditForm = ({post, setIsEditing}) => {
-  const [textValue, setTextValue] = useState(post.text) 
+  const [textValue, setTextValue] = useState(post.text || post.caption || '');
+  const rows = textValue.split('\n').length + 1;
   const updatePost = useUpdatePost();
   const onCancelClick = () => {
     setIsEditing(false);
@@ -50,7 +51,7 @@ const EditForm = ({post, setIsEditing}) => {
   };
   return (
     <form action="" method="POST" onSubmit={onSubmit}>
-      <textarea className="text-input" name="text" value={textValue} onChange={onTextChange} autoFocus />
+      <textarea className="text-input" rows={rows} name="text" value={textValue} onChange={onTextChange} autoFocus />
       <button className="btn-save" name="saveButton" type="submit">
           Сохранить
       </button>
@@ -58,10 +59,9 @@ const EditForm = ({post, setIsEditing}) => {
           Отмена
       </button>
     </form>
-  )
+  );
 }
 const PostCard = ({post, setIsEditing}) => {
-  const { id, text, status, photo, caption, files } = post;
   const deletePost = useDeletePost();
   const publishPost = usePublishPost();
   const onPublishClick = () => {
@@ -75,7 +75,7 @@ const PostCard = ({post, setIsEditing}) => {
   };
   return (
     <>
-      <p className="post-text">{text || caption}</p>
+      <p className="post-text">{post.text || post.caption}</p>
       <button className="btn-publish" name="publishButton" type="button" onClick={onPublishClick}>
         Опубликовать
       </button>
@@ -86,7 +86,7 @@ const PostCard = ({post, setIsEditing}) => {
         Удалить
       </button>
     </>
-  )
+  );
 }
 
 export default Post;

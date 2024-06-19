@@ -117,6 +117,7 @@ footer {
   border: none;
   outline: none;
   height: auto;
+  padding: 0;
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
