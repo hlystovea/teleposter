@@ -3,11 +3,6 @@ function Gallery({photos = [], className = 'image-gallery'}) {
     case 0:
       return ;
 
-    case 1:
-      return (
-        <img className='post-image' key={photos[0].key} src={photos[0].url} alt={photos[0].alt} />
-      );
-
     default:
       const items = photos.map((photo) => {
         return (
