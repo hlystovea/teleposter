@@ -1,11 +1,15 @@
 const baseUrl = process.env.REACT_APP_API_URL + 'posts/';
 
-const postList = async () => {
+const getPosts = async () => {
     return postRequest(baseUrl);
 }
 
-const postRetrieve = async (id) => {  
+const retrievePost = async (id) => {  
     return postRequest(baseUrl + id);
+}
+
+const createPost = async (data) => {
+    return postRequest(baseUrl, 'POST', data);
 }
 
 const updatePost = async (id, data) => {
@@ -39,4 +43,4 @@ const postRequest = async(url, method = 'GET', data = undefined) => {
     });
 };
 
-export { postList, postRetrieve, updatePost, publishPost, deletePost };
+export { getPosts, retrievePost, createPost, updatePost, publishPost, deletePost };

@@ -4,6 +4,7 @@ import { usePublishPost } from './usePublishPost';
 import { useUpdatePost } from './useUpdatePost';
 import Card from '../common/Card';
 import Gallery from '../common/Gallery';
+import Form from './Form';
 
 const mediaUrl = process.env.REACT_APP_MEDIA_URL;
 
@@ -17,9 +18,11 @@ function Post({post}) {
       alt: file,
     };
   })
+
   const updatePost = useUpdatePost();
   const deletePost = useDeletePost();
   const publishPost = usePublishPost();
+
   const onPublishClick = () => {
     publishPost.mutate(post.id);
   };
@@ -61,40 +64,16 @@ function Post({post}) {
   )
   return (
     <Card>
-      <Gallery photos={photos} />
+      <Gallery photos={photos} isEditing={isEditing} />
       {isEditing ? (
-        <Form post={post} buttons={formButtons} onSubmit={onSubmit} />
+        <Form id={post.id} buttons={formButtons} onSubmit={onSubmit} initialText={post.text || post.caption || ''} />
       ) : (
-        <Content post={post} buttons={postButtons} />
+        <>
+          <p className='post-text'>{post.text || post.caption}</p>
+          {postButtons}
+        </>
       )}
     </Card>
-  );
-}
-
-const Form = ({post, buttons, onSubmit}) => {
-  const [textValue, setTextValue] = useState(post.text || post.caption || '');
-  const rows = textValue.split('\n').length;
-  const onTextChange = (event) => {
-    const input = event.target;
-    setTextValue(input.value);
-    input.style.height = '1px';
-    input.style.height = input.scrollHeight + 'px';
-  };
-  return (
-    <>
-      <form id={post.id} onSubmit={onSubmit}>
-        <textarea className='text-input' rows={rows} name='text' value={textValue} onChange={onTextChange} autoFocus />
-      </form>
-      {buttons}
-    </>
-  );
-}
-const Content = ({post, buttons}) => {
-  return (
-    <>
-      <p className='post-text'>{post.text || post.caption}</p>
-      {buttons}
-    </>
   );
 }
 
