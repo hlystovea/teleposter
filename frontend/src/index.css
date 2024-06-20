@@ -101,16 +101,28 @@ footer {
   gap: 5px;
 }
 
-.image-gallery img {
-  display: flex;
-  max-height: 150px;
-  object-fit: cover;
+.image-gallery div {
+  display: block;
+  position: relative;
   flex-grow: 1;
+  font-size: 0;
 }
 
-.image-gallery img:only-child {
+.image-gallery div img {
   width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+}
+
+.image-gallery div:only-child img {
   max-height: none;
+}
+
+.image-gallery div button {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  z-index: 1000;
 }
 
 .text-input {
