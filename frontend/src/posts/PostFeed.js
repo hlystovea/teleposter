@@ -3,8 +3,11 @@ import Post from './Post';
 import Form from './Form';
 import Card from '../common/Card';
 import { useGetPosts } from './useGetPosts';
+import Gallery from '../common/Gallery';
+import { useState } from 'react';
 
 function PostsFeed() {
+  const [newFiles, setNewFiles] = useState([]);
   const createPost = useCreatePost();
   const getPosts = useGetPosts();
   const { isLoading, error, data } = getPosts;
@@ -22,11 +25,20 @@ function PostsFeed() {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+    data.files = [...newFiles];
     createPost.mutate(data);
+    setNewFiles([]);
   };
+  const addFile = (file) => {
+    setNewFiles([...newFiles, file]);
+  };
+  const deleteFile = (file) => {
+    setNewFiles(newFiles.filter(item => item !== file))
+  };
+  const formId = 'newPostForm';
   const formButtons = (
     <>
-      <button className='btn-save' name='saveButton' type='submit'>
+      <button className='btn-save' name='saveButton' form={formId} type='submit'>
           Сохранить
       </button>
     </>
@@ -34,7 +46,8 @@ function PostsFeed() {
   return (
     <div className='posts'>
       <Card>
-        <Form id='newPostForm' buttons={formButtons} onSubmit={onSubmit}  />
+        <Gallery photos={[]} deletePhoto={deleteFile} addPhoto={addFile} isEditing={true} />
+        <Form id={formId} buttons={formButtons} onSubmit={onSubmit}  />
       </Card>
       {postCards.length !== 0 ? postCards : emptyMessage}
     </div>

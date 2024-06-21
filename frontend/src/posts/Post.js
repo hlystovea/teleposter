@@ -5,8 +5,6 @@ import { useUpdatePost } from './useUpdatePost';
 import Card from '../common/Card';
 import Gallery from '../common/Gallery';
 import Form from './Form';
-import uploadFile from '../files/apiClient';
-import FileForm from '../files/fileForm';
 
 const mediaUrl = process.env.REACT_APP_MEDIA_URL;
 
@@ -53,16 +51,8 @@ function Post({post}) {
     setFiles([...files, ...newFiles]);
     setNewFiles([]);
   };
-  const onFileFormSubmit = async (event) => {
-    event.preventDefault();
-    const form = event.target.closest('form');
-    const data = new FormData(form);
-    const uploadedFile = await uploadFile(data);
-    if (!uploadedFile) {
-      console.log('File upload error');
-      return ;
-    }
-    setNewFiles([...newFiles, uploadedFile.file_name]);
+  const addFile = (file) => {
+    setNewFiles([...newFiles, file]);
   };
   const deleteFile = (file) => {
     setFiles(files.filter(item => item !== file));
@@ -105,10 +95,9 @@ function Post({post}) {
   return (
     <Card>
       <p className='post-date'>{formatDate(post.created_at)}</p>
-      <Gallery photos={photos} deletePhoto={deleteFile} isEditing={isEditing} />
+      <Gallery photos={photos} deletePhoto={deleteFile} addPhoto={addFile} isEditing={isEditing} />
       {isEditing ? (
         <>
-          <FileForm action={onFileFormSubmit} />
           <Form id={post.id} buttons={formButtons} onSubmit={onSubmit} initialText={post.text || post.caption || ''} />
         </>
       ) : (

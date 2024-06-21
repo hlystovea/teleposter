@@ -1,5 +1,4 @@
-import PostsFeed from "./posts/PostFeed"
-import PostForm from "./posts/PostForm"
+import PostsFeed from './posts/PostFeed'
 
 function Main() {
   return (
