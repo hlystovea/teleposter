@@ -68,6 +68,17 @@ function Post({post}) {
     setFiles(files.filter(item => item !== file));
     setNewFiles(newFiles.filter(item => item !== file))
   };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() - new Date().getTimezoneOffset());
+    return date.toLocaleDateString('ru-RU',  {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
   const postButtons = (
     <>
       <button className='btn-publish' name='publishButton' type='button' onClick={onPublishClick}>
@@ -93,6 +104,7 @@ function Post({post}) {
   )
   return (
     <Card>
+      <p className='post-date'>{formatDate(post.created_at)}</p>
       <Gallery photos={photos} deletePhoto={deleteFile} isEditing={isEditing} />
       {isEditing ? (
         <>
