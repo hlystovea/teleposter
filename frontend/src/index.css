@@ -114,7 +114,7 @@ footer {
   object-fit: cover;
 }
 
-.image-gallery div:only-child img {
+.image-gallery div:first-child img {
   max-height: none;
 }
 
