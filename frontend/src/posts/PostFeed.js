@@ -7,6 +7,7 @@ import Gallery from '../common/Gallery';
 import { useState } from 'react';
 
 function PostsFeed() {
+  const [textValue, setTextValue] = useState('');
   const [newFiles, setNewFiles] = useState([]);
   const createPost = useCreatePost();
   const getPosts = useGetPosts();
@@ -28,26 +29,26 @@ function PostsFeed() {
     data.files = [...newFiles];
     createPost.mutate(data);
     setNewFiles([]);
+    setTextValue('');
   };
-  const addFile = (file) => {
-    setNewFiles([...newFiles, file]);
-  };
-  const deleteFile = (file) => {
-    setNewFiles(newFiles.filter(item => item !== file))
-  };
+
   const formId = 'newPostForm';
   const formButtons = (
-    <>
-      <button className='btn-save' name='saveButton' form={formId} type='submit'>
-          Сохранить
-      </button>
-    </>
+    <button className='btn-save' name='saveButton' form={formId} type='submit'>
+        Сохранить
+    </button>
   )
   return (
     <div className='posts'>
       <Card>
-        <Gallery photos={[]} deletePhoto={deleteFile} addPhoto={addFile} isEditing={true} />
-        <Form id={formId} buttons={formButtons} onSubmit={onSubmit}  />
+        <Gallery newFiles={newFiles} setNewFiles={setNewFiles} />
+        <Form
+          id={formId}
+          buttons={formButtons}
+          onSubmit={onSubmit}
+          textValue={textValue}
+          setTextValue={setTextValue}
+        />
       </Card>
       {postCards.length !== 0 ? postCards : emptyMessage}
     </div>

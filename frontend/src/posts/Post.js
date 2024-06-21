@@ -5,23 +5,13 @@ import { useUpdatePost } from './useUpdatePost';
 import Card from '../common/Card';
 import Gallery from '../common/Gallery';
 import Form from './Form';
-
-const mediaUrl = process.env.REACT_APP_MEDIA_URL;
-
+import formatDate from '../common/formatDate';
 
 function Post({post}) {
   const [isEditing, setIsEditing] = useState(false);
+  const [textValue, setTextValue] = useState(post.text || post.caption || '');
   const [files, setFiles] = useState(post.files);
   const [newFiles, setNewFiles] = useState([]);
-
-  const photos = [...files, ...newFiles].map((file, index) => {
-    return {
-      key: file + index,
-      name: file,
-      url: `${mediaUrl}${file}`,
-      alt: file,
-    };
-  })
 
   const updatePost = useUpdatePost();
   const deletePost = useDeletePost();
@@ -51,24 +41,6 @@ function Post({post}) {
     setFiles([...files, ...newFiles]);
     setNewFiles([]);
   };
-  const addFile = (file) => {
-    setNewFiles([...newFiles, file]);
-  };
-  const deleteFile = (file) => {
-    setFiles(files.filter(item => item !== file));
-    setNewFiles(newFiles.filter(item => item !== file))
-  };
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    date.setMinutes(date.getMinutes() - new Date().getTimezoneOffset());
-    return date.toLocaleDateString('ru-RU',  {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
   const postButtons = (
     <>
       <button className='btn-publish' name='publishButton' type='button' onClick={onPublishClick}>
@@ -95,11 +67,21 @@ function Post({post}) {
   return (
     <Card>
       <p className='post-date'>{formatDate(post.created_at)}</p>
-      <Gallery photos={photos} deletePhoto={deleteFile} addPhoto={addFile} isEditing={isEditing} />
+      <Gallery
+        files={files}
+        newFiles={newFiles}
+        setFiles={setFiles}
+        setNewFiles={setNewFiles}
+        isEditing={isEditing}
+      />
       {isEditing ? (
-        <>
-          <Form id={post.id} buttons={formButtons} onSubmit={onSubmit} initialText={post.text || post.caption || ''} />
-        </>
+        <Form
+          id={post.id}
+          buttons={formButtons}
+          onSubmit={onSubmit}
+          textValue={textValue}
+          setTextValue={setTextValue}
+        />
       ) : (
         <>
           <p className='post-text'>{post.text || post.caption}</p>
