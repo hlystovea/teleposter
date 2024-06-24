@@ -33,7 +33,7 @@ async def common_message_handler(message: Message, bot: Bot) -> None:
     except (TypeError, TelegramBadRequest) as error:
         logger.error(f'An error has occurred: {repr(error)}')
         await message.answer(MSG.forwarding_error)
-    
+
     else:
         await save_to_db(message)
 

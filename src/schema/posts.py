@@ -13,6 +13,10 @@ class Post(TelegramMessage):
     status: Literal['non-moderated', 'published'] = 'non-moderated'
     files: list[str] = []
 
+    def __init__(self, **kwargs):
+        kwargs['text'] = kwargs.get('text') or kwargs.get('caption')
+        super().__init__(**kwargs)
+
 
 class RequestPost(BaseModel):
     text: str | None = None
