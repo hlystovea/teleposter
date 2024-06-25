@@ -30,6 +30,8 @@ services:
       - mongo
     env_file:
       - ./.env
+    environment:
+      - DEBUG=True
     develop:
       watch: 
         - path: ./requirements.txt
@@ -53,8 +55,8 @@ services:
       watch: 
         - path: ./requirements.txt
           action: rebuild
-        - path: ./src
-          target: /teleposter/src
+        - path: ./src/bot
+          target: /teleposter/src/bot
           action: sync+restart
 
   nginx:
