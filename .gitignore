@@ -161,3 +161,6 @@ cython_debug/
 
 # media files
 media/
+
+# VScode
+.vscode
