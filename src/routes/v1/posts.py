@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 from pymongo.errors import InvalidOperation
 from pymongo.results import DeleteResult, InsertOneResult, UpdateResult
@@ -9,7 +9,8 @@ from core.logger import logger
 from core.messages import MSG
 from db.mongo import posts
 from httpx import HTTPError
-from schema.posts import Post, RequestPost, ResponsePost, ResponseMessage
+from schema.posts import (Post, PostStatus, RequestPost,
+                          ResponsePost, ResponseMessage)
 from services.telegram import publish_in_channel
 from services.files import save_media
 
@@ -44,7 +45,7 @@ async def get_post(post_id: str, posts=Depends(posts)):
     post = await posts.find_one({'_id': ObjectId(post_id)})
 
     if not post:
-        raise HTTPException(status_code=404, detail='Post not found')
+        raise HTTPException(status_code=404, detail='The post was not found')
 
     return post
 
@@ -57,9 +58,7 @@ async def get_post(post_id: str, posts=Depends(posts)):
     description='Creates a new non-moderated post',
     name='v1:posts:post-create',
 )
-async def create_post(
-    post: Post, background_tasks: BackgroundTasks, posts=Depends(posts)
-):
+async def create_post(post: Post, posts=Depends(posts)):
     post = await save_media(post)
 
     try:
@@ -67,7 +66,7 @@ async def create_post(
 
     except InvalidOperation as error:
         logger.error(f'An error occurred while saving the post: {repr(error)}')
-        raise HTTPException(status_code=500, detail='Post not created')
+        raise HTTPException(status_code=500, detail='A post was not created')
 
     return {'_id': result.inserted_id}
 
@@ -83,7 +82,7 @@ async def delete_post(post_id: str, posts=Depends(posts)) -> None:
     result: DeleteResult = await posts.delete_one({'_id': ObjectId(post_id)})
 
     if not result.deleted_count:
-        raise HTTPException(status_code=404, detail='Post not found')
+        raise HTTPException(status_code=404, detail='The post was not found')
 
     return None
 
@@ -96,17 +95,27 @@ async def delete_post(post_id: str, posts=Depends(posts)) -> None:
     name='v1:posts:post-update',
 )
 async def update_post(post_id: str, post: RequestPost, posts=Depends(posts)):
-    result: UpdateResult = await posts.update_one(
-        filter={'_id': ObjectId(post_id)},
-        update={'$set': post.model_dump(exclude_unset=True)}
-    )
+    validated_data = post.model_dump(exclude_unset=True)
+    validated_data['status'] = PostStatus.MODERATED
+
+    try:
+        result: UpdateResult = await posts.update_one(
+            filter={'_id': ObjectId(post_id)},
+            update={'$set': validated_data}
+        )
+
+    except InvalidOperation as error:
+        logger.error(
+            f'An error occurred while updating the post: {repr(error)}'
+        )
+        raise HTTPException(
+            status_code=500, detail='The post was not updated'
+        )
 
     if not result.matched_count:
-        raise HTTPException(status_code=404, detail='Post not found')
+        raise HTTPException(status_code=404, detail='The post was not found')
 
-    updated_post = await posts.find_one({'_id': ObjectId(post_id)})
-
-    return updated_post
+    return await posts.find_one({'_id': ObjectId(post_id)})
 
 
 @router.post(
@@ -121,10 +130,14 @@ async def publish_post(post_id: str, posts=Depends(posts)):
     post = await posts.find_one(filter={'_id': ObjectId(post_id)})
 
     if not post:
-        raise HTTPException(status_code=404, detail='Post not found')
+        raise HTTPException(status_code=404, detail='The post was not found')
 
     try:
         await publish_in_channel(Post(**post))
+        await posts.update_one(
+            filter={'_id': ObjectId(post_id)},
+            update={'$set': {'status': PostStatus.PUBLISHED}}
+        )
 
     except HTTPError as error:
         logger.error(
@@ -137,5 +150,10 @@ async def publish_post(post_id: str, posts=Depends(posts)):
             f'An error occurred while validating the post: {repr(error)}'
         )
         raise HTTPException(status_code=500, detail='Internal server error')
+
+    except InvalidOperation as error:
+        logger.error(
+            f'An error occurred while updating the status: {repr(error)}'
+        )
 
     return {'message': MSG.post_has_been_published}

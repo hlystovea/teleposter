@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from enum import Enum
 
 from pydantic import BaseModel, Field
 from pydantic_mongo import ObjectIdField
@@ -7,10 +7,16 @@ from pydantic_mongo import ObjectIdField
 from schema.telegram import TelegramMessage
 
 
+class PostStatus(str, Enum):
+    NON_MODERATED = 'non-moderated'
+    MODERATED = 'moderated'
+    PUBLISHED = 'published'
+
+
 class Post(TelegramMessage):
     user_name: str | None = None
     created_at: datetime = Field(default_factory=datetime.now)
-    status: Literal['non-moderated', 'published'] = 'non-moderated'
+    status: PostStatus = PostStatus.NON_MODERATED
     files: list[str] = []
 
     def __init__(self, **kwargs):
@@ -20,7 +26,6 @@ class Post(TelegramMessage):
 
 class RequestPost(BaseModel):
     text: str | None = None
-    caption: str | None = None
     files: list[str] = []
 
 
