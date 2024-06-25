@@ -139,7 +139,14 @@ footer {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.post-date {
+.status-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   font-size: 0.8rem;
   margin: 4px 8px;
+}
+
+.status-bar p {
+  margin: 0;
 }

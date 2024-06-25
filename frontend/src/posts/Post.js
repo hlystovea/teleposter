@@ -6,12 +6,18 @@ import Card from '../common/Card';
 import Gallery from '../common/Gallery';
 import Form from './Form';
 import formatDate from '../common/formatDate';
+import Status from './Status';
 
 function Post({post}) {
   const [isEditing, setIsEditing] = useState(false);
   const [textValue, setTextValue] = useState(post.text || post.caption || '');
   const [files, setFiles] = useState(post.files);
   const [newFiles, setNewFiles] = useState([]);
+  const status = {
+    'non-moderated': 'Не модерирован',
+    'moderated': 'Прошел модерацию',
+    'published': 'Опубликован',
+  }
 
   const updatePost = useUpdatePost();
   const deletePost = useDeletePost();
@@ -66,7 +72,7 @@ function Post({post}) {
   )
   return (
     <Card>
-      <p className='post-date'>{formatDate(post.created_at)}</p>
+      <Status date={formatDate(post.created_at)} text={status[post.status]} />
       <Gallery
         files={files}
         newFiles={newFiles}
