@@ -1,6 +1,6 @@
 function Status({date, text}) {
   return (
-    <div class='status-bar'>
+    <div className='status-bar'>
       <div>
           <p>{date}</p>
       </div>
