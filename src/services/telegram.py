@@ -5,7 +5,7 @@ from typing import Any, AsyncGenerator
 
 from aiogram import Bot
 from aiogram.enums import ParseMode
-from aiogram.types import FSInputFile, File
+from aiogram.types import Chat, FSInputFile, File
 from aiogram.utils.media_group import MediaGroupBuilder, MediaType
 from httpx import AsyncClient
 
@@ -67,3 +67,7 @@ async def create_album(post: Post) -> list[MediaType]:
         album_builder.add_photo(media=FSInputFile(config.media_root / file))
 
     return album_builder.build()
+
+
+async def get_chat_info() -> Chat:
+    return await bot.get_chat(config.channel)
