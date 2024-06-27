@@ -1,12 +1,14 @@
-import logo from './logo.png';
+import Logo from './common/Logo';
 
 function Header() {
   return (
     <header>
-      <nav className="nav-bar">
-        <ul className="nav-menu">
-          <li><a href="/"><img className="logo" src={logo} alt="logo" /></a></li>
-          <li><a href="/auth/logout">Выход</a></li>
+      <nav className='nav-bar'>
+        <ul className='nav-menu'>
+          <li>
+            <Logo />
+          </li>
+          <li><a href='/auth/logout'>Выход</a></li>
         </ul>
       </nav>
     </header>

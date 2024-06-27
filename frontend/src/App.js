@@ -12,11 +12,11 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <>
-      <Header />
       <QueryClientProvider client={queryClient}>
+        <Header />
         <Main />
+        <Footer />
       </QueryClientProvider>
-      <Footer />
     </>
   );
 }
