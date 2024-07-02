@@ -1,7 +1,7 @@
 function FileForm ({onChange}) {
   return (
     <form encType='multipart/form-data'>
-      <input name='file' type='file' accept='image/*' onChange={onChange} />
+      <input name='files' type='file' accept='image/*' onChange={onChange} multiple />
     </form>
   )
 }

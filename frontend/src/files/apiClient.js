@@ -1,6 +1,6 @@
 const baseUrl = process.env.REACT_APP_API_URL + 'files/';
 
-const uploadFile = async (data) => {
+const uploadFiles = async (data) => {
     return fetch(baseUrl + 'upload/', {
         method: 'POST',
         body: data
@@ -17,4 +17,4 @@ const uploadFile = async (data) => {
     });
 }
 
-export default uploadFile;
+export default uploadFiles;

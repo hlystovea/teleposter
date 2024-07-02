@@ -1,4 +1,4 @@
-import uploadFile from '../files/apiClient';
+import uploadFiles from '../files/apiClient';
 import FileForm from '../files/fileForm';
 
 const mediaUrl = process.env.REACT_APP_MEDIA_URL;
@@ -16,16 +16,17 @@ function Gallery({newFiles, setNewFiles, files = [], setFiles = () => undefined,
     event.preventDefault();
     const form = event.target.closest('form');
     const data = new FormData(form);
-    const uploadedFile = await uploadFile(data);
-    if (!uploadedFile) {
+    const uploadedFiles = await uploadFiles(data);
+    console.log(uploadedFiles);
+    if (!uploadedFiles) {
       console.log('File upload error');
       return ;
     }
-    addFile(uploadedFile.file_name);
+    addFiles(uploadedFiles);
     form.reset();
   };
-  const addFile = (file) => {
-    setNewFiles([...newFiles, file]);
+  const addFiles = (files) => {
+    setNewFiles([...newFiles, ...files.map((file) => file.file_name)]);
   };
   const removeFile = (file) => {
     setFiles(files.filter(item => item !== file));

@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 
@@ -32,11 +34,11 @@ async def get(file_id: str):
 
 @router.post(
     '/upload/',
-    response_model=File,
+    response_model=list[File],
     summary='upload the file',
     description='Uploads the file to the server',
     name='v1:files:file-upload',
 )
-async def upload_file(file: UploadFile):
-    file_name = await save_file(file=file)
-    return File(file_name=file_name)
+async def upload_file(files: list[UploadFile]):
+    names = await asyncio.gather(*(save_file(file=file) for file in files))
+    return [File(file_name=name) for name in names]
