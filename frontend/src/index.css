@@ -19,7 +19,7 @@ code {
 #root {
   display: grid;
   grid-template-columns: auto minmax(600px, 800px) auto;
-  grid-template-rows: 60px 1fr 200px;
+  grid-template-rows: 60px 1fr auto;
   grid-template-areas:
     "header header header"
     "left-side main right-side"
@@ -32,6 +32,7 @@ header {
   display: flex;
   grid-area: header;
   justify-content: center;
+  padding-right: 32px;
 }
 
 main {
@@ -40,8 +41,21 @@ main {
 
 footer {
   grid-area: footer;
+  display: flex;
+  justify-content: space-between;
   margin-top: 50px;
+  padding: 16px 32px;
   border-top: 1px solid gray;
+  color: darkgray;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 .nav-bar {
@@ -80,7 +94,6 @@ footer {
 }
 
 .logo p {
-  margin: 0;
   font-weight: 400;
   font-style: normal;
   font-size: 1.5em;
@@ -113,7 +126,7 @@ footer {
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: stretch;
-  gap: 5px;
+  gap: 4px;
 }
 
 .image-gallery div {
