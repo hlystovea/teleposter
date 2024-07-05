@@ -48,27 +48,27 @@ function Post({post}) {
     setNewFiles([]);
   };
   const postButtons = (
-    <>
-      <button className='btn-publish' name='publishButton' type='button' onClick={onPublishClick}>
+    <div className='flex flex-end'>
+      <button className='btn' name='publishButton' type='button' onClick={onPublishClick}>
         Опубликовать
       </button>
-      <button className='btn-edit' name='editButton' type='button' onClick={onEditClick}>
+      <button className='btn' name='editButton' type='button' onClick={onEditClick}>
         Редактировать
       </button>
-      <button className='btn-delete' name='deleteButton' type='button' onClick={onDeleteClick}>
+      <button className='btn' name='deleteButton' type='button' onClick={onDeleteClick}>
         Удалить
       </button>
-    </>
+    </div>
   )
   const formButtons = (
-    <>
-      <button form={post.id} className='btn-save' name='saveButton' type='submit'>
+    <div className='flex flex-end'>
+      <button className='btn' name='saveButton' type='submit' form={post.id} >
         Сохранить
       </button>
-      <button className='btn-cancel' name='cancelButton' type='button' onClick={onCancelClick}>
+      <button className='btn' name='cancelButton' type='button' onClick={onCancelClick}>
         Отмена
       </button>
-    </>
+    </div>
   )
   return (
     <Card>

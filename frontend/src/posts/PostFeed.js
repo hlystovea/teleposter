@@ -6,11 +6,11 @@ import { useGetPosts } from './useGetPosts';
 import Gallery from '../common/Gallery';
 import { useState } from 'react';
 
-function PostsFeed() {
+function PostsFeed({status}) {
   const [textValue, setTextValue] = useState('');
   const [newFiles, setNewFiles] = useState([]);
   const createPost = useCreatePost();
-  const getPosts = useGetPosts();
+  const getPosts = useGetPosts({status: status});
   const { isLoading, error, data } = getPosts;
 
   if (isLoading) return <p>Загрузка...</p>;
@@ -34,9 +34,11 @@ function PostsFeed() {
 
   const formId = 'newPostForm';
   const formButtons = (
-    <button className='btn-save' name='saveButton' form={formId} type='submit'>
-        Сохранить
-    </button>
+    <div className='flex flex-end'>
+      <button className='btn' name='saveButton' form={formId} type='submit'>
+          Сохранить
+      </button>
+    </div>
   )
   return (
     <div className='posts'>

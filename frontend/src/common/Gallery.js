@@ -36,7 +36,7 @@ function Gallery({newFiles, setNewFiles, files = [], setFiles = () => undefined,
     const onClick = () => {
       removeFile(photo.name);
     }
-    const button = <button onClick={onClick}>x</button>;
+    const button = <button className='btn' onClick={onClick}>x</button>;
     return (
       <div key={photo.key}>
         <img src={photo.url} alt={photo.alt} />

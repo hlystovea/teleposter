@@ -25,8 +25,10 @@ router = APIRouter(prefix='/api/v1/posts', tags=['posts'])
     description='Responds with a list of posts',
     name='v1:posts:post-list',
 )
-async def get_posts(posts=Depends(posts)):
-    return await posts.find().sort(
+async def get_posts(status: str | None = None, posts=Depends(posts)):
+    return await posts.find(
+        {'status': status}
+    ).sort(
         [
             ('status', 1),
             ('created_at', -1)

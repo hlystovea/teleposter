@@ -185,3 +185,54 @@ textarea {
 .status-bar p {
   margin: 0;
 }
+
+.btn {
+  margin: 4px;
+  padding: 5px 10px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: beige;
+  border-radius: 10px;
+  display: block;
+  border: 0px;
+  font-weight: 400;
+  box-shadow: 0px 0px 8px -7px #aeaeae;
+  background: #3e3e3e;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-active {
+  box-shadow: 0px 0px 14px -7px #f09819;
+  background-image: linear-gradient(#F09819 0%, #FF512F 100%);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+.flex-start {
+  justify-content: flex-start;
+}
+
+.flex-center {
+  justify-content: center;
+}

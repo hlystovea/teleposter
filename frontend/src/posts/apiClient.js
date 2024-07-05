@@ -2,8 +2,9 @@ import request from '../common/apiClient';
 
 const baseUrl = process.env.REACT_APP_API_URL + 'posts/';
 
-const getPosts = async () => {
-    return request(baseUrl);
+const getPosts = async (params = {}) => {
+    const query_params = new URLSearchParams(params).toString();
+    return request(baseUrl + '?' + query_params);
 }
 
 const retrievePost = async (id) => {  
