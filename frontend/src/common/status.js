@@ -1,7 +1,7 @@
 const postStatus = {
-    'non-moderated': 'non-moderated',
-    'moderated': 'moderated',
-    'published': 'published'
+    NEW: 'non-moderated',
+    MODERATED: 'moderated',
+    PUBLISHED: 'published'
 };
 
 export default postStatus;

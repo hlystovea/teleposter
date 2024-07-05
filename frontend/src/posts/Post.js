@@ -48,7 +48,7 @@ function Post({post}) {
     setNewFiles([]);
   };
   const postButtons = (
-    <div className='flex flex-end'>
+    <div className='button-panel flex-end'>
       <button className='btn' name='publishButton' type='button' onClick={onPublishClick}>
         Опубликовать
       </button>
@@ -61,7 +61,7 @@ function Post({post}) {
     </div>
   )
   const formButtons = (
-    <div className='flex flex-end'>
+    <div className='button-panel flex-end'>
       <button className='btn' name='saveButton' type='submit' form={post.id} >
         Сохранить
       </button>

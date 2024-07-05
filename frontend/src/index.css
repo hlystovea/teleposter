@@ -109,8 +109,6 @@ a {
 .card {
   width: 600px;
   border: 1px solid gray;
-  border-radius: 16px;
-  padding: 0 0 16px;
 }
 
 .post-text,
@@ -194,7 +192,6 @@ textarea {
   transition: 0.5s;
   background-size: 200% auto;
   color: beige;
-  border-radius: 10px;
   display: block;
   border: 0px;
   font-weight: 400;
@@ -221,18 +218,21 @@ textarea {
   background-image: linear-gradient(#F09819 0%, #FF512F 100%);
 }
 
-.flex {
-  display: flex;
+.button-panel {
+  margin: 6px;
 }
 
 .flex-end {
+  display: flex;
   justify-content: flex-end;
 }
 
 .flex-start {
+  display: flex;
   justify-content: flex-start;
 }
 
 .flex-center {
+  display: flex;
   justify-content: center;
 }
