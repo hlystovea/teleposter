@@ -8,6 +8,7 @@ from pymongo.results import DeleteResult, InsertOneResult, UpdateResult
 from core.logger import logger
 from core.messages import MSG
 from db.mongo import posts
+from dependencies.auth import get_current_user
 from httpx import HTTPError
 from schema.posts import (Post, PostStatus, RequestPost,
                           ResponsePost, ResponseMessage)
@@ -25,9 +26,14 @@ router = APIRouter(prefix='/api/v1/posts', tags=['posts'])
     description='Responds with a list of posts',
     name='v1:posts:post-list',
 )
-async def get_posts(status: str | None = None, posts=Depends(posts)):
+async def get_posts(
+    status: str | None = None,
+    posts=Depends(posts),
+    _: int = Depends(get_current_user)
+):
+    filters = {'status': status} if status else {}
     return await posts.find(
-        {'status': status}
+        filters
     ).sort(
         [
             ('status', 1),
@@ -43,7 +49,9 @@ async def get_posts(status: str | None = None, posts=Depends(posts)):
     description='Responds a post',
     name='v1:posts:post-retrieve',
 )
-async def get_post(post_id: str, posts=Depends(posts)):
+async def get_post(
+    post_id: str, posts=Depends(posts), _: int = Depends(get_current_user)
+):
     post = await posts.find_one({'_id': ObjectId(post_id)})
 
     if not post:
@@ -60,7 +68,9 @@ async def get_post(post_id: str, posts=Depends(posts)):
     description='Creates a new non-moderated post',
     name='v1:posts:post-create',
 )
-async def create_post(post: Post, posts=Depends(posts)):
+async def create_post(
+    post: Post, posts=Depends(posts), _: int = Depends(get_current_user)
+):
     post = await save_media(post)
 
     try:
@@ -80,7 +90,9 @@ async def create_post(post: Post, posts=Depends(posts)):
     description='Deletes a post',
     name='v1:posts:post-delete',
 )
-async def delete_post(post_id: str, posts=Depends(posts)) -> None:
+async def delete_post(
+    post_id: str, posts=Depends(posts), _: int = Depends(get_current_user)
+) -> None:
     result: DeleteResult = await posts.delete_one({'_id': ObjectId(post_id)})
 
     if not result.deleted_count:
@@ -96,7 +108,12 @@ async def delete_post(post_id: str, posts=Depends(posts)) -> None:
     description='Updates a post',
     name='v1:posts:post-update',
 )
-async def update_post(post_id: str, post: RequestPost, posts=Depends(posts)):
+async def update_post(
+    post_id: str,
+    post: RequestPost,
+    posts=Depends(posts),
+    _: int = Depends(get_current_user)
+):
     validated_data = post.model_dump(exclude_unset=True)
     validated_data['status'] = PostStatus.MODERATED
 
@@ -128,7 +145,9 @@ async def update_post(post_id: str, post: RequestPost, posts=Depends(posts)):
     description='Publishes a post in a telegram channel',
     name='v1:posts:post-publish',
 )
-async def publish_post(post_id: str, posts=Depends(posts)):
+async def publish_post(
+    post_id: str, posts=Depends(posts), _: int = Depends(get_current_user)
+):
     post = await posts.find_one(filter={'_id': ObjectId(post_id)})
 
     if not post:

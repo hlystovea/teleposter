@@ -1,13 +1,10 @@
-from typing import Annotated
-
-from fastapi import APIRouter, HTTPException, Query, status
-from fastapi.requests import Request
-from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import JSONResponse
 from joserfc import jwt
 
 from core.config import config
 from core.logger import logger
-from schema.auth import AuthResponse
+from schema.auth import Token
 from schema.telegram import TelegramAuthData
 from services.telegram import check_auth_data
 
@@ -17,7 +14,7 @@ router = APIRouter(prefix='/api/v1/auth')
 
 @router.post(
     '/telegram-auth',
-    response_model=AuthResponse,
+    response_model=Token,
     summary='authorize user',
     description='User authorization using telegram',
     name='v1:auth:telegram-auth',

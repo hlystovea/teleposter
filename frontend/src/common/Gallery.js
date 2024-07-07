@@ -17,11 +17,12 @@ function Gallery({newFiles, setNewFiles, files = [], setFiles = () => undefined,
     const form = event.target.closest('form');
     const data = new FormData(form);
     const uploadedFiles = await uploadFiles(data);
-    console.log(uploadedFiles);
+
     if (!uploadedFiles) {
-      console.log('File upload error');
+      console.log('Error: File upload error');
       return ;
     }
+
     addFiles(uploadedFiles);
     form.reset();
   };

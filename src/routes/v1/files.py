@@ -1,8 +1,9 @@
 import asyncio
 
-from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 
+from dependencies.auth import get_current_user
 from schema.files import File
 from services.files import save_file
 from services.telegram import get_file, stream_file
@@ -39,6 +40,8 @@ async def get(file_id: str):
     description='Uploads the file to the server',
     name='v1:files:file-upload',
 )
-async def upload_file(files: list[UploadFile]):
+async def upload_file(
+    files: list[UploadFile], _: int = Depends(get_current_user)
+):
     names = await asyncio.gather(*(save_file(file=file) for file in files))
     return [File(file_name=name) for name in names]

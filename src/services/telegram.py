@@ -16,7 +16,7 @@ from schema.telegram import TelegramAuthData
 
 bot = Bot(
     token=config.bot_token.get_secret_value(),
-    parse_mode=ParseMode.MARKDOWN_V2
+    parse_mode=ParseMode.MARKDOWN
 )
 
 
@@ -71,3 +71,8 @@ async def create_album(post: Post) -> list[MediaType]:
 
 async def get_chat_info() -> Chat:
     return await bot.get_chat(config.channel)
+
+
+async def get_admin_ids() -> list[int]:
+    admins = await bot.get_chat_administrators(config.channel)
+    return [admin.user.id for admin in admins]

@@ -4,7 +4,7 @@ const request = async(url, method = 'GET', data = undefined) => {
         method: method,
         headers: {
             'Content-Type': 'application/json',
-            'authorization': `Token ${token}`
+            'Authorization': `Bearer ${token}`
         }
     };
     if (data) {

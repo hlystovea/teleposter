@@ -1,5 +1,4 @@
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import Chat
 from fastapi import APIRouter, HTTPException, status
 from services.telegram import get_chat_info
 

@@ -28,7 +28,7 @@ function App() {
         }
       })
       .catch(error => {
-        console.log(`Ошибка: ${error.message}`);
+        console.log(`Error: ${error.message}`);
         setLoggedIn(false);
       });
   };

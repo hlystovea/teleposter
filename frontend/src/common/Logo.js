@@ -13,7 +13,7 @@ function Logo() {
   if (isLoading) return <></>;
 
   if (error) {
-    console.log(`Ошибка: ${error.message}`);
+    console.log(`Error: ${error.message}`);
     return <></>;
   }
   
