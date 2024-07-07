@@ -13,7 +13,7 @@ function Main({loggedIn, login}) {
         ) : (
           <>
           <h1>
-            Please log in &nbsp;
+            Пожалуйста, авторизуйтесь &nbsp;
             <LoginButton
               botUsername={process.env.REACT_APP_BOT_USERNAME}
               buttonSize='small'
@@ -24,7 +24,7 @@ function Main({loggedIn, login}) {
             />
           </h1>
           <p>
-            Only selected users may see this site. 
+            Только избранные пользователи могут просматривать этот сайт. 
           </p>
           </>
         )}

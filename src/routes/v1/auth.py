@@ -12,10 +12,10 @@ from schema.telegram import TelegramAuthData
 from services.telegram import check_auth_data
 
 
-router = APIRouter(prefix='/auth')
+router = APIRouter(prefix='/api/v1/auth')
 
 
-@router.get(
+@router.post(
     '/telegram-auth',
     response_model=AuthResponse,
     summary='authorize user',
@@ -40,11 +40,4 @@ async def telegram_auth(auth_data: TelegramAuthData):
     response = JSONResponse({'token': token})
     response.set_cookie(key=config.cookie_name, value=token)
 
-    return response
-
-
-@router.get('/logout')
-async def logout():
-    response = RedirectResponse('/')
-    response.delete_cookie(key=config.cookie_name)
     return response

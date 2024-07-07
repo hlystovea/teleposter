@@ -1,8 +1,10 @@
 const request = async(url, method = 'GET', data = undefined) => {
+    const token = localStorage.getItem('token')
     const options = {
         method: method,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorization': `Token ${token}`
         }
     };
     if (data) {
