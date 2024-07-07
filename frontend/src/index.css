@@ -32,7 +32,6 @@ header {
   display: flex;
   grid-area: header;
   justify-content: center;
-  padding-right: 32px;
 }
 
 main {
@@ -77,6 +76,7 @@ a {
 
 .nav-menu li:last-child {
   margin-left: auto;
+  box-sizing: border-box;
 }
 
 .logo {
@@ -234,4 +234,45 @@ textarea {
 .flex-center {
   display: flex;
   justify-content: center;
+}
+
+.profile {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding: 8px;
+  height: 60px;
+}
+
+.profile__logo {
+  object-fit: cover;
+  height: 100%;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile__menu {
+  display: none;
+  position: absolute;
+  top: 60px;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  background-color: #1a1e21;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.profile__menu li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.show {
+  display: block;
 }

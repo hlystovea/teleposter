@@ -1,6 +1,7 @@
 import Logo from './common/Logo';
+import Profile from './auth/Profile';
 
-function Header() {
+function Header({profile, logout}) {
   return (
     <header>
       <nav className='nav-bar'>
@@ -8,7 +9,9 @@ function Header() {
           <li>
             <Logo />
           </li>
-          <li><a href='/auth/logout'>Выход</a></li>
+          <li>
+            {profile && <Profile profile={profile} logout={logout} />}
+          </li>
         </ul>
       </nav>
     </header>
