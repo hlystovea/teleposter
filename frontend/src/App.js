@@ -6,7 +6,7 @@ import {
 import Footer from './Footer'
 import Header from './Header'
 import Main from './Main'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { telegramAuth } from './auth/apiClient';
 
 const queryClient = new QueryClient();
@@ -16,8 +16,8 @@ function App() {
   const [profile, setProfile] = useState(null);
 
   const login = async (authData) => {
-    const {photo_url, username} = authData;
-    setProfile({photo_url, username});
+    setProfile(authData);
+    localStorage.setItem('profile', JSON.stringify(authData))
     telegramAuth(authData)
       .then(response => {
         if (response.token) {
@@ -35,9 +35,17 @@ function App() {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('profile');
     setLoggedIn(false);
     setProfile(null);
   }
+
+  useEffect(_ => {
+    const profile = localStorage.getItem('profile')
+    if (profile) {
+      login(JSON.parse(profile));
+    }
+  }, [])
 
   return (
     <>
