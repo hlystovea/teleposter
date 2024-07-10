@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ProfileLogo from './ProfileLogo';
-import LogoutLink from './LogoutLink';
+import LogoutItem from './LogoutItem';
 
 function Profile({profile, logout}) {
     const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -16,7 +16,9 @@ function Profile({profile, logout}) {
         <ProfileLogo profile={profile} onClick={onClick} />
         {isOpenMenu && (
           <ul className={`profile__menu ${isOpenMenu ? 'show' : ''}`}>
-            <LogoutLink onClick={onLogout}/>
+            <li>{profile.first_name} {profile.last_name}</li>
+            <li>@{profile.username}</li>
+            <li className='profile__menu__item' onClick={onLogout}><LogoutItem /></li>
           </ul>
         )}
       </div>
